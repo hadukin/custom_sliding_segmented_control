@@ -1,6 +1,6 @@
 # CustomSlidingSegmentedControl
 
-![screenshot2](screenshot/screenshot_1.png)
+![screenshot2](screenshot/screenshot_1.gif)
 
 #### Example
 

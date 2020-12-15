@@ -11,12 +11,14 @@ class AnimationPanel extends StatelessWidget {
     this.radius,
     this.color,
     this.curve,
+    this.padding,
   }) : super(key: key);
 
   final double offset;
   final double width;
   final double radius;
   final double elevation;
+  final double padding;
   final String text;
   final Duration duration;
   final Color color;
@@ -35,10 +37,7 @@ class AnimationPanel extends StatelessWidget {
         color: color,
         borderRadius: BorderRadius.circular(radius),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 12,
-            horizontal: 12,
-          ),
+          padding: EdgeInsets.all(padding),
           child: Text(
             text,
             maxLines: 1,
