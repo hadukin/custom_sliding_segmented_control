@@ -15,6 +15,9 @@ class CustomSlidingSegmentedControl extends StatefulWidget {
     this.panelColor = CupertinoColors.white,
     this.textColor = Colors.black,
     this.curve = Curves.easeInOut,
+    this.innerPadding = 2.0,
+    this.padding = 12,
+    this.fixedWidth,
   }) : super(key: key);
   final Function(int) onTap;
   final List<String> data;
@@ -25,6 +28,9 @@ class CustomSlidingSegmentedControl extends StatefulWidget {
   final Color panelColor;
   final Color textColor;
   final Curve curve;
+  final double innerPadding;
+  final double padding;
+  final double fixedWidth;
 
   @override
   _CustomSlidingSegmentedControlState createState() =>
@@ -51,15 +57,17 @@ class _CustomSlidingSegmentedControlState
         Container(
           decoration: BoxDecoration(
             color: widget.background,
-            borderRadius: BorderRadius.circular(widget.radius),
+            borderRadius: BorderRadius.circular(
+              widget.radius != 0 ? widget.radius + 2 : widget.radius,
+            ),
           ),
-          padding: const EdgeInsets.all(2),
+          padding: EdgeInsets.all(widget.innerPadding),
           child: Column(
             children: [
               Stack(
                 children: [
                   AnimationPanel(
-                    offset: widget.data.indexOf(current) == 0 ? 0 : offset,
+                    offset: offset,
                     width: sizes[widget.data.indexOf(current)],
                     text: widget.data[widget.data.indexOf(current)],
                     duration: widget.duration,
@@ -67,6 +75,7 @@ class _CustomSlidingSegmentedControlState
                     elevation: widget.elevation,
                     color: widget.panelColor,
                     curve: widget.curve,
+                    padding: widget.padding,
                   ),
                   Row(
                     children: [
@@ -74,9 +83,11 @@ class _CustomSlidingSegmentedControlState
                         MeasureSize(
                           onChange: (v) {
                             final Map<int, double> _temp = {};
-                            _temp.putIfAbsent(
-                                widget.data.indexOf(item), () => v.width);
-                            sizes = {...sizes, ..._temp};
+                            _temp.putIfAbsent(widget.data.indexOf(item),
+                                () => widget.fixedWidth ?? v.width);
+                            setState(() {
+                              sizes = {...sizes, ..._temp};
+                            });
                           },
                           child: InkWell(
                             onTap: () {
@@ -100,16 +111,16 @@ class _CustomSlidingSegmentedControlState
                                 widget.onTap(widget.data.indexOf(current));
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 12,
-                                horizontal: 12,
-                              ),
+                              width: widget.fixedWidth ?? null,
+                              padding: EdgeInsets.all(widget.padding),
                               decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.circular(widget.radius),
                               ),
                               child: Text(
                                 item,
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
                                 style: TextStyle(
                                   color: widget.textColor,
                                 ),
