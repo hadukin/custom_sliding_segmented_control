@@ -6,26 +6,26 @@ import 'package:flutter/material.dart';
 class CustomSlidingSegmentedControl extends StatefulWidget {
   CustomSlidingSegmentedControl({
     Key key,
-    @required this.onTap,
+    @required this.onValueChanged,
     @required this.data,
     this.duration,
     this.radius = 4.0,
     this.elevation = 2.0,
-    this.background = CupertinoColors.systemGrey4,
-    this.panelColor = CupertinoColors.white,
+    this.backgroundColor = CupertinoColors.systemGrey4,
+    this.thumbColor = CupertinoColors.white,
     this.textColor = Colors.black,
     this.curve = Curves.easeInOut,
     this.innerPadding = 2.0,
     this.padding = 12,
     this.fixedWidth,
   }) : super(key: key);
-  final Function(int) onTap;
+  final ValueChanged<int> onValueChanged;
   final List<String> data;
   final Duration duration;
   final double radius;
   final double elevation;
-  final Color background;
-  final Color panelColor;
+  final Color backgroundColor;
+  final Color thumbColor;
   final Color textColor;
   final Curve curve;
   final double innerPadding;
@@ -41,6 +41,7 @@ class _CustomSlidingSegmentedControlState
     extends State<CustomSlidingSegmentedControl> {
   String current;
   double offset = 0.0;
+  double height;
   Map<int, double> sizes = {};
 
   @override
@@ -56,7 +57,7 @@ class _CustomSlidingSegmentedControlState
       children: [
         Container(
           decoration: BoxDecoration(
-            color: widget.background,
+            color: widget.backgroundColor,
             borderRadius: BorderRadius.circular(
               widget.radius != 0 ? widget.radius + 2 : widget.radius,
             ),
@@ -68,28 +69,28 @@ class _CustomSlidingSegmentedControlState
                 children: [
                   AnimationPanel(
                     offset: offset,
+                    height: height,
                     width: sizes[widget.data.indexOf(current)],
                     text: widget.data[widget.data.indexOf(current)],
                     duration: widget.duration,
                     radius: widget.radius,
                     elevation: widget.elevation,
-                    color: widget.panelColor,
+                    color: widget.thumbColor,
                     curve: widget.curve,
-                    padding: widget.padding,
                   ),
                   Row(
                     children: [
                       for (var item in widget.data)
                         MeasureSize(
                           onChange: (v) {
+                            if (height == null) height = v.height;
                             final Map<int, double> _temp = {};
                             _temp.putIfAbsent(widget.data.indexOf(item),
                                 () => widget.fixedWidth ?? v.width);
-                            setState(() {
-                              sizes = {...sizes, ..._temp};
-                            });
+                            setState(() => sizes = {...sizes, ..._temp});
                           },
                           child: InkWell(
+                            borderRadius: BorderRadius.circular(widget.radius),
                             onTap: () {
                               current = item;
                               final _offset = sizes.values
@@ -99,16 +100,13 @@ class _CustomSlidingSegmentedControlState
                               if (_offset.isNotEmpty) {
                                 final computeOffset = _offset.reduce(
                                     (value, element) => value + element);
-                                setState(() {
-                                  offset = computeOffset;
-                                });
+                                setState(() => offset = computeOffset);
                               } else {
-                                setState(() {
-                                  offset = 0;
-                                });
+                                setState(() => offset = 0);
                               }
-                              if (widget.onTap != null)
-                                widget.onTap(widget.data.indexOf(current));
+                              if (widget.onValueChanged != null)
+                                widget.onValueChanged(
+                                    widget.data.indexOf(current));
                             },
                             child: Container(
                               width: widget.fixedWidth ?? null,

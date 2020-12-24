@@ -6,19 +6,19 @@ class AnimationPanel extends StatelessWidget {
     @required this.offset,
     @required this.width,
     @required this.text,
+    @required this.height,
     this.elevation,
     this.duration,
     this.radius,
     this.color,
     this.curve,
-    this.padding,
   }) : super(key: key);
 
   final double offset;
   final double width;
+  final double height;
   final double radius;
   final double elevation;
-  final double padding;
   final String text;
   final Duration duration;
   final Color color;
@@ -36,14 +36,7 @@ class AnimationPanel extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         color: color,
         borderRadius: BorderRadius.circular(radius),
-        child: Padding(
-          padding: EdgeInsets.all(padding),
-          child: Text(
-            text,
-            maxLines: 1,
-            style: TextStyle(color: color),
-          ),
-        ),
+        child: Container(height: height),
       ),
     );
   }

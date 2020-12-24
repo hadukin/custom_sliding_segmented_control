@@ -1,6 +1,6 @@
 # CustomSlidingSegmentedControl
 
-![screenshot2](screenshot/screenshot_1.gif)
+![](https://raw.githubusercontent.com/hadukin/custom_sliding_segmented_control/main/screenshot/screenshot_1.gif)
 
 #### Example
 

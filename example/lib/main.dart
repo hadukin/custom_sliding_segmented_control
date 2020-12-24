@@ -44,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
               data: ['Новости', 'Карты', 'Список'],
               duration: Duration(milliseconds: 200),
               radius: 30.0,
-              onTap: (index) {
+              onValueChanged: (index) {
                 print(index);
               },
             ),
@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
               data: ['Новости', '1', '2'],
               radius: 5,
               elevation: 8,
-              onTap: (v) {
+              onValueChanged: (v) {
                 print(v);
               },
             ),
@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
               data: ['Новости', 'Карты', 'Список'],
               duration: Duration(milliseconds: 200),
               radius: 0.0,
-              onTap: (v) {
+              onValueChanged: (v) {
                 print(v);
               },
             ),
@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
               data: ['Новости', 'Карты', 'Список'],
               radius: 10,
               elevation: 8,
-              onTap: (v) {
+              onValueChanged: (v) {
                 print(v);
               },
             ),
@@ -81,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
             CustomSlidingSegmentedControl(
               data: ['Новости', 'Карты', 'Список'],
               elevation: 0,
-              onTap: (v) {
+              onValueChanged: (v) {
                 print(v);
               },
             ),
@@ -90,12 +90,12 @@ class _MyHomePageState extends State<MyHomePage> {
               data: ['Новости', 'Карты', 'Список'],
               elevation: 0,
               innerPadding: 0,
-              background: Colors.black,
-              panelColor: Colors.blue,
+              backgroundColor: Colors.black,
+              thumbColor: Colors.blue,
               textColor: Colors.white,
               duration: Duration(milliseconds: 300),
               curve: Curves.easeInToLinear,
-              onTap: (v) {
+              onValueChanged: (v) {
                 print(v);
               },
             ),
@@ -105,12 +105,12 @@ class _MyHomePageState extends State<MyHomePage> {
               elevation: 0,
               innerPadding: 2,
               padding: 16,
-              background: Colors.black,
-              panelColor: Colors.blue,
+              backgroundColor: Colors.black,
+              thumbColor: Colors.blue,
               textColor: Colors.white,
               duration: Duration(milliseconds: 300),
               curve: Curves.easeInToLinear,
-              onTap: (v) {
+              onValueChanged: (v) {
                 print(v);
               },
             ),
