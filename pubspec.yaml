@@ -1,6 +1,6 @@
 name: custom_sliding_segmented_control
 description: CustomSlidingSegmentedControl
-version: 0.0.2
+version: 0.0.4
 homepage: https://github.com/hadukin/custom_sliding_segmented_control
 repository: https://github.com/hadukin/custom_sliding_segmented_control
 
@@ -15,5 +15,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  lint: ^1.3.0
 
 flutter:
