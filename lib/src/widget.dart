@@ -1,52 +1,65 @@
-import 'package:custom_sliding_segmented_control/src/animation_panel.dart';
-import 'package:custom_sliding_segmented_control/src/measure_size.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:custom_sliding_segmented_control/src/animation_panel.dart';
+import 'package:custom_sliding_segmented_control/src/compute_offset.dart';
+import 'package:custom_sliding_segmented_control/src/measure_size.dart';
 
-class CustomSlidingSegmentedControl extends StatefulWidget {
-  CustomSlidingSegmentedControl({
+class CustomSlidingSegmentedControl<T> extends StatefulWidget {
+  const CustomSlidingSegmentedControl({
     Key key,
-    @required this.onTap,
-    @required this.data,
+    @required this.onValueChanged,
+    @required this.children,
+    this.initialValue,
     this.duration,
     this.radius = 4.0,
     this.elevation = 2.0,
-    this.background = CupertinoColors.systemGrey4,
-    this.panelColor = CupertinoColors.white,
+    this.backgroundColor = CupertinoColors.systemGrey4,
+    this.thumbColor = CupertinoColors.white,
     this.textColor = Colors.black,
     this.curve = Curves.easeInOut,
     this.innerPadding = 2.0,
     this.padding = 12,
     this.fixedWidth,
+    this.decoration,
   }) : super(key: key);
-  final Function(int) onTap;
-  final List<String> data;
+  final BoxDecoration decoration;
+  final ValueChanged<T> onValueChanged;
   final Duration duration;
   final double radius;
   final double elevation;
-  final Color background;
-  final Color panelColor;
+  final Color backgroundColor;
+  final Color thumbColor;
   final Color textColor;
   final Curve curve;
   final double innerPadding;
   final double padding;
   final double fixedWidth;
+  final Map<T, Widget> children;
+  final T initialValue;
 
   @override
-  _CustomSlidingSegmentedControlState createState() =>
-      _CustomSlidingSegmentedControlState();
+  _CustomSlidingSegmentedControlState<T> createState() =>
+      _CustomSlidingSegmentedControlState<T>();
 }
 
-class _CustomSlidingSegmentedControlState
-    extends State<CustomSlidingSegmentedControl> {
-  String current;
+class _CustomSlidingSegmentedControlState<T>
+    extends State<CustomSlidingSegmentedControl<T>> {
+  T current;
+  double height;
   double offset = 0.0;
-  Map<int, double> sizes = {};
+  Map<T, double> sizes = {};
 
   @override
   void initState() {
     super.initState();
-    current = widget.data[0];
+    final _list = widget.children.keys.toList();
+    final _index = _list.indexOf(widget.initialValue);
+    final _keys = _list.toList();
+    if (widget.initialValue != null) {
+      current = _keys[_index];
+    } else {
+      current = _keys[0];
+    }
   }
 
   @override
@@ -55,76 +68,77 @@ class _CustomSlidingSegmentedControlState
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          decoration: BoxDecoration(
-            color: widget.background,
-            borderRadius: BorderRadius.circular(
-              widget.radius != 0 ? widget.radius + 2 : widget.radius,
-            ),
-          ),
+          decoration: widget.decoration ??
+              BoxDecoration(
+                color: widget.backgroundColor,
+                borderRadius: BorderRadius.circular(
+                  widget.radius != 0 ? widget.radius + 2 : widget.radius,
+                ),
+              ),
           padding: EdgeInsets.all(widget.innerPadding),
           child: Column(
             children: [
               Stack(
                 children: [
-                  AnimationPanel(
+                  AnimationPanel<T>(
                     offset: offset,
-                    width: sizes[widget.data.indexOf(current)],
-                    text: widget.data[widget.data.indexOf(current)],
+                    height: height,
+                    width: sizes[current],
                     duration: widget.duration,
                     radius: widget.radius,
                     elevation: widget.elevation,
-                    color: widget.panelColor,
+                    color: widget.thumbColor,
                     curve: widget.curve,
-                    padding: widget.padding,
                   ),
                   Row(
                     children: [
-                      for (var item in widget.data)
+                      for (final item in widget.children.entries)
                         MeasureSize(
                           onChange: (v) {
-                            final Map<int, double> _temp = {};
-                            _temp.putIfAbsent(widget.data.indexOf(item),
-                                () => widget.fixedWidth ?? v.width);
+                            height ??= v.height;
+                            final Map<T, double> _temp = {};
+                            _temp.putIfAbsent(
+                                item.key, () => widget.fixedWidth ?? v.width);
+                            if (widget.initialValue != null &&
+                                widget.initialValue == item.key) {
+                              final _offset = computeOffset<T>(
+                                current: current,
+                                items: widget.children.keys.toList(),
+                                sizes: sizes.values.toList(),
+                              );
+                              setState(() {
+                                offset = _offset;
+                              });
+                            }
                             setState(() {
                               sizes = {...sizes, ..._temp};
                             });
                           },
                           child: InkWell(
+                            borderRadius: BorderRadius.circular(widget.radius),
                             onTap: () {
-                              current = item;
-                              final _offset = sizes.values
-                                  .toList()
-                                  .getRange(0, widget.data.indexOf(current))
-                                  .toList();
-                              if (_offset.isNotEmpty) {
-                                final computeOffset = _offset.reduce(
-                                    (value, element) => value + element);
-                                setState(() {
-                                  offset = computeOffset;
-                                });
-                              } else {
-                                setState(() {
-                                  offset = 0;
-                                });
+                              setState(() => current = item.key);
+                              final _keys = widget.children.keys.toList();
+                              final _offset = computeOffset<T>(
+                                current: current,
+                                items: _keys,
+                                sizes: sizes.values.toList(),
+                              );
+                              setState(() => offset = _offset);
+
+                              final _value = _keys[_keys.indexOf(current)];
+                              if (widget.onValueChanged != null) {
+                                widget.onValueChanged(_value);
                               }
-                              if (widget.onTap != null)
-                                widget.onTap(widget.data.indexOf(current));
                             },
                             child: Container(
-                              width: widget.fixedWidth ?? null,
+                              width: widget.fixedWidth,
                               padding: EdgeInsets.all(widget.padding),
                               decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.circular(widget.radius),
                               ),
-                              child: Text(
-                                item,
-                                textAlign: TextAlign.center,
-                                maxLines: 1,
-                                style: TextStyle(
-                                  color: widget.textColor,
-                                ),
-                              ),
+                              child: item.value,
                             ),
                           ),
                         ),
