@@ -1,3 +1,15 @@
+# 0.1.1
+
+## Doc
+
+- Update example
+
+# 0.1.0
+
+## Feat
+
+- Update version number
+
 # 0.0.4
 
 ## Feat
