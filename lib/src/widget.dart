@@ -6,9 +6,9 @@ import 'package:custom_sliding_segmented_control/src/measure_size.dart';
 
 class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   const CustomSlidingSegmentedControl({
-    Key key,
-    @required this.onValueChanged,
-    @required this.children,
+    Key? key,
+    required this.onValueChanged,
+    required this.children,
     this.initialValue,
     this.duration,
     this.radius = 4.0,
@@ -22,9 +22,9 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.fixedWidth,
     this.decoration,
   }) : super(key: key);
-  final BoxDecoration decoration;
+  final BoxDecoration? decoration;
   final ValueChanged<T> onValueChanged;
-  final Duration duration;
+  final Duration? duration;
   final double radius;
   final double elevation;
   final Color backgroundColor;
@@ -33,9 +33,9 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final Curve curve;
   final double innerPadding;
   final double padding;
-  final double fixedWidth;
+  final double? fixedWidth;
   final Map<T, Widget> children;
-  final T initialValue;
+  final T? initialValue;
 
   @override
   _CustomSlidingSegmentedControlState<T> createState() =>
@@ -43,16 +43,16 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
 }
 
 class _CustomSlidingSegmentedControlState<T>
-    extends State<CustomSlidingSegmentedControl<T>> {
-  T current;
-  double height;
+    extends State<CustomSlidingSegmentedControl<T?>> {
+  T? current;
+  double? height;
   double offset = 0.0;
-  Map<T, double> sizes = {};
+  Map<T?, double> sizes = {};
 
   @override
   void initState() {
     super.initState();
-    final _list = widget.children.keys.toList();
+    final List<T?> _list = widget.children.keys.toList();
     final _index = _list.indexOf(widget.initialValue);
     final _keys = _list.toList();
     if (widget.initialValue != null) {
@@ -95,10 +95,10 @@ class _CustomSlidingSegmentedControlState<T>
                       for (final item in widget.children.entries)
                         MeasureSize(
                           onChange: (v) {
-                            height ??= v.height;
-                            final Map<T, double> _temp = {};
+                            height ??= v!.height;
+                            final Map<T?, double> _temp = {};
                             _temp.putIfAbsent(
-                                item.key, () => widget.fixedWidth ?? v.width);
+                                item.key, () => widget.fixedWidth ?? v!.width);
                             if (widget.initialValue != null &&
                                 widget.initialValue == item.key) {
                               final _offset = computeOffset<T>(
@@ -118,7 +118,8 @@ class _CustomSlidingSegmentedControlState<T>
                             borderRadius: BorderRadius.circular(widget.radius),
                             onTap: () {
                               setState(() => current = item.key);
-                              final _keys = widget.children.keys.toList();
+                              final List<T?> _keys =
+                                  widget.children.keys.toList();
                               final _offset = computeOffset<T>(
                                 current: current,
                                 items: _keys,
@@ -127,9 +128,7 @@ class _CustomSlidingSegmentedControlState<T>
                               setState(() => offset = _offset);
 
                               final _value = _keys[_keys.indexOf(current)];
-                              if (widget.onValueChanged != null) {
-                                widget.onValueChanged(_value);
-                              }
+                              widget.onValueChanged(_value);
                             },
                             child: Container(
                               width: widget.fixedWidth,
@@ -138,7 +137,7 @@ class _CustomSlidingSegmentedControlState<T>
                                 borderRadius:
                                     BorderRadius.circular(widget.radius),
                               ),
-                              child: item.value,
+                              child: Center(child: item.value),
                             ),
                           ),
                         ),
