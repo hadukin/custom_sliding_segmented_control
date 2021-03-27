@@ -6,9 +6,9 @@ import 'package:custom_sliding_segmented_control/src/measure_size.dart';
 
 class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   const CustomSlidingSegmentedControl({
-    Key key,
-    @required this.onValueChanged,
-    @required this.children,
+    Key? key,
+    required this.children,
+    this.onValueChanged,
     this.initialValue,
     this.duration,
     this.radius = 4.0,
@@ -21,10 +21,11 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.padding = 12,
     this.fixedWidth,
     this.decoration,
-  }) : super(key: key);
-  final BoxDecoration decoration;
-  final ValueChanged<T> onValueChanged;
-  final Duration duration;
+  })  : assert(children.length != 0),
+        super(key: key);
+  final BoxDecoration? decoration;
+  final ValueChanged<T>? onValueChanged;
+  final Duration? duration;
   final double radius;
   final double elevation;
   final Color backgroundColor;
@@ -33,32 +34,66 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final Curve curve;
   final double innerPadding;
   final double padding;
-  final double fixedWidth;
+  final double? fixedWidth;
   final Map<T, Widget> children;
-  final T initialValue;
+  final T? initialValue;
 
   @override
   _CustomSlidingSegmentedControlState<T> createState() =>
-      _CustomSlidingSegmentedControlState<T>();
+      _CustomSlidingSegmentedControlState();
 }
 
 class _CustomSlidingSegmentedControlState<T>
     extends State<CustomSlidingSegmentedControl<T>> {
-  T current;
-  double height;
+  T? current;
+  double? height;
   double offset = 0.0;
-  Map<T, double> sizes = {};
+  Map<T?, double> sizes = {};
 
   @override
   void initState() {
     super.initState();
-    final _list = widget.children.keys.toList();
+    final List<T?> _list = widget.children.keys.toList();
     final _index = _list.indexOf(widget.initialValue);
     final _keys = _list.toList();
     if (widget.initialValue != null) {
       current = _keys[_index];
     } else {
       current = _keys[0];
+    }
+  }
+
+  void _calculateSize(Size v, MapEntry<T?, Widget> item) {
+    height ??= v.height;
+    final Map<T?, double> _temp = {};
+    _temp.putIfAbsent(item.key, () => widget.fixedWidth ?? v.width);
+    if (widget.initialValue != null && widget.initialValue == item.key) {
+      final _offset = computeOffset<T>(
+        current: current,
+        items: widget.children.keys.toList(),
+        sizes: sizes.values.toList(),
+      );
+      setState(() {
+        offset = _offset;
+      });
+    }
+    setState(() {
+      sizes = {...sizes, ..._temp};
+    });
+  }
+
+  void _onTapItem(MapEntry<T?, Widget> item) {
+    setState(() => current = item.key);
+    final List<T?> _keys = widget.children.keys.toList();
+    final _offset = computeOffset<T>(
+      current: current,
+      items: _keys,
+      sizes: sizes.values.toList(),
+    );
+    setState(() => offset = _offset);
+    final _value = _keys[_keys.indexOf(current)]!;
+    if (widget.onValueChanged != null) {
+      widget.onValueChanged!(_value);
     }
   }
 
@@ -95,41 +130,12 @@ class _CustomSlidingSegmentedControlState<T>
                       for (final item in widget.children.entries)
                         MeasureSize(
                           onChange: (v) {
-                            height ??= v.height;
-                            final Map<T, double> _temp = {};
-                            _temp.putIfAbsent(
-                                item.key, () => widget.fixedWidth ?? v.width);
-                            if (widget.initialValue != null &&
-                                widget.initialValue == item.key) {
-                              final _offset = computeOffset<T>(
-                                current: current,
-                                items: widget.children.keys.toList(),
-                                sizes: sizes.values.toList(),
-                              );
-                              setState(() {
-                                offset = _offset;
-                              });
-                            }
-                            setState(() {
-                              sizes = {...sizes, ..._temp};
-                            });
+                            _calculateSize(v, item);
                           },
                           child: InkWell(
                             borderRadius: BorderRadius.circular(widget.radius),
                             onTap: () {
-                              setState(() => current = item.key);
-                              final _keys = widget.children.keys.toList();
-                              final _offset = computeOffset<T>(
-                                current: current,
-                                items: _keys,
-                                sizes: sizes.values.toList(),
-                              );
-                              setState(() => offset = _offset);
-
-                              final _value = _keys[_keys.indexOf(current)];
-                              if (widget.onValueChanged != null) {
-                                widget.onValueChanged(_value);
-                              }
+                              _onTapItem(item);
                             },
                             child: Container(
                               width: widget.fixedWidth,

@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ], // red to yellow
                 ),
               ),
-              onValueChanged: (SegmentType v) {
+              onValueChanged: (v) {
                 print(v);
               },
             ),
@@ -86,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               duration: Duration(milliseconds: 200),
               radius: 30.0,
-              onValueChanged: (index) {
+              onValueChanged: (int index) {
                 print(index);
               },
             ),
@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               radius: 5,
               elevation: 8,
-              onValueChanged: (v) {
+              onValueChanged: (SegmentType v) {
                 print(v);
               },
             ),
@@ -113,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               duration: Duration(milliseconds: 200),
               radius: 0.0,
-              onValueChanged: (v) {
+              onValueChanged: (String v) {
                 print(v);
               },
             ),
@@ -127,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               radius: 10,
               elevation: 8,
-              onValueChanged: (v) {
+              onValueChanged: (SegmentType v) {
                 print(v);
               },
             ),
@@ -139,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 SegmentType.paper: Text('Список'),
               },
               elevation: 0,
-              onValueChanged: (v) {
+              onValueChanged: (SegmentType v) {
                 print(v);
               },
             ),
@@ -166,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
               textColor: Colors.white,
               duration: Duration(milliseconds: 300),
               curve: Curves.easeInToLinear,
-              onValueChanged: (v) {
+              onValueChanged: (SegmentType v) {
                 print(v);
               },
             ),
@@ -194,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
               textColor: Colors.white,
               duration: Duration(milliseconds: 300),
               curve: Curves.easeInToLinear,
-              onValueChanged: (v) {
+              onValueChanged: (SegmentType v) {
                 print(v);
               },
             ),
