@@ -21,6 +21,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.padding = 12,
     this.fixedWidth,
     this.decoration,
+    this.isStretch = false,
   })  : assert(children.length != 0),
         super(key: key);
   final BoxDecoration? decoration;
@@ -36,6 +37,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final double padding;
   final double? fixedWidth;
   final Map<T, Widget> children;
+  final bool isStretch;
   final T? initialValue;
 
   @override
@@ -97,64 +99,97 @@ class _CustomSlidingSegmentedControlState<T>
     }
   }
 
+  Widget layout() {
+    return Container(
+      decoration: widget.decoration ??
+          BoxDecoration(
+            color: widget.backgroundColor,
+            borderRadius: BorderRadius.circular(
+              widget.radius != 0 ? widget.radius + 2 : widget.radius,
+            ),
+          ),
+      padding: EdgeInsets.all(widget.innerPadding),
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              AnimationPanel<T>(
+                offset: offset,
+                height: height,
+                width: sizes[current],
+                duration: widget.duration,
+                radius: widget.radius,
+                elevation: widget.elevation,
+                color: widget.thumbColor,
+                curve: widget.curve,
+              ),
+              Row(
+                children: [
+                  for (final item in widget.children.entries)
+                    MeasureSize(
+                      onChange: (v) {
+                        _calculateSize(v, item);
+                      },
+                      child: widget.isStretch
+                          ? Expanded(
+                              child: InkWell(
+                                borderRadius:
+                                    BorderRadius.circular(widget.radius),
+                                onTap: () {
+                                  _onTapItem(item);
+                                },
+                                child: Center(
+                                  child: Container(
+                                    width: widget.fixedWidth,
+                                    padding: EdgeInsets.all(widget.padding),
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(widget.radius),
+                                    ),
+                                    child: item.value,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : InkWell(
+                              borderRadius:
+                                  BorderRadius.circular(widget.radius),
+                              onTap: () {
+                                _onTapItem(item);
+                              },
+                              child: Center(
+                                child: Container(
+                                  width: widget.fixedWidth,
+                                  padding: EdgeInsets.all(widget.padding),
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.circular(widget.radius),
+                                  ),
+                                  child: item.value,
+                                ),
+                              ),
+                            ),
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          decoration: widget.decoration ??
-              BoxDecoration(
-                color: widget.backgroundColor,
-                borderRadius: BorderRadius.circular(
-                  widget.radius != 0 ? widget.radius + 2 : widget.radius,
-                ),
-              ),
-          padding: EdgeInsets.all(widget.innerPadding),
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  AnimationPanel<T>(
-                    offset: offset,
-                    height: height,
-                    width: sizes[current],
-                    duration: widget.duration,
-                    radius: widget.radius,
-                    elevation: widget.elevation,
-                    color: widget.thumbColor,
-                    curve: widget.curve,
-                  ),
-                  Row(
-                    children: [
-                      for (final item in widget.children.entries)
-                        MeasureSize(
-                          onChange: (v) {
-                            _calculateSize(v, item);
-                          },
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(widget.radius),
-                            onTap: () {
-                              _onTapItem(item);
-                            },
-                            child: Container(
-                              width: widget.fixedWidth,
-                              padding: EdgeInsets.all(widget.padding),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(widget.radius),
-                              ),
-                              child: item.value,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+        if (widget.isStretch)
+          Expanded(
+            child: layout(),
+          )
+        else
+          layout()
       ],
     );
   }

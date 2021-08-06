@@ -1,3 +1,8 @@
+# 1.1.0
+
+- Add new property isStretch
+- Stretches CustomSlidingSegmentedControl to full width
+
 # 1.0.0
 
 ## Feat
