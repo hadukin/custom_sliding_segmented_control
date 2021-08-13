@@ -63,6 +63,7 @@ class _CustomSlidingSegmentedControlState<T>
     } else {
       current = _keys[0];
     }
+    offset = (widget.fixedWidth ?? 0) * _index;
   }
 
   void _calculateSize(Size v, MapEntry<T?, Widget> item) {
