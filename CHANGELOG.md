@@ -1,3 +1,11 @@
+# 1.1.1
+
+## Fix
+
+- initial value without animation
+- added new screen for example
+- example null safety
+
 # 1.1.0
 
 - Add new property isStretch

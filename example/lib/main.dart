@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+  MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -46,6 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<SegmentType>(
                 elevation: 2,
+                initialValue: SegmentType.map,
                 isStretch: true,
                 children: {
                   SegmentType.news: Text(
@@ -211,6 +212,95 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 elevation: 0,
                 innerPadding: 0,
+                backgroundColor: Colors.black,
+                thumbColor: Colors.blue,
+                textColor: Colors.white,
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInToLinear,
+                onValueChanged: (SegmentType v) {
+                  print(v);
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push<void>(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return SecondView();
+                      },
+                    ),
+                  );
+                },
+                child: Text('Second screen'),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SecondView extends StatelessWidget {
+  const SecondView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Second View'),
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
+              CustomSlidingSegmentedControl<SegmentType>(
+                elevation: 2,
+                initialValue: SegmentType.paper,
+                isStretch: true,
+                children: {
+                  SegmentType.news: Text(
+                    'Новости',
+                    textAlign: TextAlign.center,
+                  ),
+                  SegmentType.map: Text(
+                    'Карты',
+                    textAlign: TextAlign.center,
+                  ),
+                  SegmentType.paper: Text(
+                    'Список',
+                    textAlign: TextAlign.center,
+                  ),
+                },
+                radius: 8,
+                onValueChanged: (v) {
+                  print(v);
+                },
+              ),
+              const SizedBox(height: 20),
+              CustomSlidingSegmentedControl<SegmentType>(
+                initialValue: SegmentType.map,
+                children: {
+                  SegmentType.news: Text(
+                    'Новостной портал',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SegmentType.map: Text(
+                    'Карты',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SegmentType.paper: Text(
+                    'Список',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                },
+                elevation: 0,
+                innerPadding: 2,
+                padding: 16,
                 backgroundColor: Colors.black,
                 thumbColor: Colors.blue,
                 textColor: Colors.white,

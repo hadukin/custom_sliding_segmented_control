@@ -6,6 +6,7 @@ class AnimationPanel<T> extends StatelessWidget {
     required this.offset,
     required this.width,
     required this.height,
+    required this.hasTouch,
     this.elevation,
     this.duration,
     this.radius,
@@ -21,12 +22,15 @@ class AnimationPanel<T> extends StatelessWidget {
   final Duration? duration;
   final Color? color;
   final Curve? curve;
+  final bool hasTouch;
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
       transform: Matrix4.translationValues(offset, 0, 0),
-      duration: duration ?? const Duration(milliseconds: 200),
+      duration: hasTouch == false
+          ? const Duration()
+          : duration ?? const Duration(milliseconds: 200),
       curve: curve!,
       width: width,
       child: PhysicalModel(

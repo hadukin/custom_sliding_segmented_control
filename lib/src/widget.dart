@@ -51,6 +51,7 @@ class _CustomSlidingSegmentedControlState<T>
   double? height;
   double offset = 0.0;
   Map<T?, double> sizes = {};
+  bool hasTouch = false;
 
   @override
   void initState() {
@@ -61,7 +62,7 @@ class _CustomSlidingSegmentedControlState<T>
     if (widget.initialValue != null) {
       current = _keys[_index];
     } else {
-      current = _keys[0];
+      current = _keys.first;
     }
   }
 
@@ -85,6 +86,9 @@ class _CustomSlidingSegmentedControlState<T>
   }
 
   void _onTapItem(MapEntry<T?, Widget> item) {
+    if (!hasTouch) {
+      setState(() => hasTouch = true);
+    }
     setState(() => current = item.key);
     final List<T?> _keys = widget.children.keys.toList();
     final _offset = computeOffset<T>(
@@ -114,6 +118,7 @@ class _CustomSlidingSegmentedControlState<T>
           Stack(
             children: [
               AnimationPanel<T>(
+                hasTouch: hasTouch,
                 offset: offset,
                 height: height,
                 width: sizes[current],
