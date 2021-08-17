@@ -1,3 +1,10 @@
+# 1.2.1
+
+## Feat
+
+- add new property `fromMax` gets the largest element, while the rest of the elements get its size
+- add new clipBehavior
+
 # 1.1.1
 
 ## Fix

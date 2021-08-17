@@ -1,5 +1,7 @@
 # CustomSlidingSegmentedControl
 
+Allows you to flexibly configure the widget for displaying controls. You can add color, speed, size, initial value, animation and more.
+
 ![](https://raw.githubusercontent.com/hadukin/custom_sliding_segmented_control/main/screenshot/screenshot_2.gif)
 
 #### Example

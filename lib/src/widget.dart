@@ -1,9 +1,48 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:custom_sliding_segmented_control/src/animation_panel.dart';
 import 'package:custom_sliding_segmented_control/src/compute_offset.dart';
 import 'package:custom_sliding_segmented_control/src/measure_size.dart';
 
+/// Example:
+///
+/// ```dart
+/// CustomSlidingSegmentedControl<int>(
+///   fromMax: true,
+///   children: {
+///     1: Text(
+///       'Segmentation',
+///       textAlign: TextAlign.center,
+///     ),
+///     2: Text(
+///       'Max',
+///       textAlign: TextAlign.center,
+///     ),
+///   },
+///   onValueChanged: (int value) {
+///     print(value);
+///   },
+/// ),
+/// ```
+///
+/// * `isStretch` - stretches CustomSlidingSegmentedControl to full width
+/// * `onValueChanged` - on change current segment
+/// * `children` - segment items map
+/// * `initialValue` - initial segment
+/// * `duration` - speed animation
+/// * `radius` - segment and AnimationPanel border radius
+/// * `elevation` - elevation
+/// * `backgroundColor` - background color
+/// * `thumbColor` - AnimationPanel color
+/// * `curve` - curve animation
+/// * `innerPadding` - inner padding
+/// * `fromMax` - gets the largest element, while the rest of the elements get its size
+/// * `fixedWidth` - fixed width items
+/// * `decoration` - decoration for controls
+/// * `padding` - item padding
+/// * `clipBehavior` - for container
 class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   const CustomSlidingSegmentedControl({
     Key? key,
@@ -15,13 +54,14 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.elevation = 2.0,
     this.backgroundColor = CupertinoColors.systemGrey4,
     this.thumbColor = CupertinoColors.white,
-    this.textColor = Colors.black,
     this.curve = Curves.easeInOut,
     this.innerPadding = 2.0,
     this.padding = 12,
     this.fixedWidth,
     this.decoration,
     this.isStretch = false,
+    this.fromMax = false,
+    this.clipBehavior = Clip.none,
   })  : assert(children.length != 0),
         super(key: key);
   final BoxDecoration? decoration;
@@ -31,7 +71,6 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final double elevation;
   final Color backgroundColor;
   final Color thumbColor;
-  final Color textColor;
   final Curve curve;
   final double innerPadding;
   final double padding;
@@ -39,6 +78,8 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final Map<T, Widget> children;
   final bool isStretch;
   final T? initialValue;
+  final bool fromMax;
+  final Clip clipBehavior;
 
   @override
   _CustomSlidingSegmentedControlState<T> createState() =>
@@ -52,6 +93,7 @@ class _CustomSlidingSegmentedControlState<T>
   double offset = 0.0;
   Map<T?, double> sizes = {};
   bool hasTouch = false;
+  double? maxSize;
 
   @override
   void initState() {
@@ -82,6 +124,9 @@ class _CustomSlidingSegmentedControlState<T>
     }
     setState(() {
       sizes = {...sizes, ..._temp};
+      if (widget.fromMax) {
+        maxSize = sizes.values.toList().reduce(max);
+      }
     });
   }
 
@@ -103,8 +148,28 @@ class _CustomSlidingSegmentedControlState<T>
     }
   }
 
+  Widget segmentItem(MapEntry<T, Widget> item) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(widget.radius),
+      onTap: () {
+        _onTapItem(item);
+      },
+      child: Center(
+        child: Container(
+          width: maxSize ?? widget.fixedWidth,
+          padding: EdgeInsets.all(widget.padding),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(widget.radius),
+          ),
+          child: item.value,
+        ),
+      ),
+    );
+  }
+
   Widget layout() {
     return Container(
+      clipBehavior: widget.clipBehavior,
       decoration: widget.decoration ??
           BoxDecoration(
             color: widget.backgroundColor,
@@ -136,44 +201,8 @@ class _CustomSlidingSegmentedControlState<T>
                         _calculateSize(v, item);
                       },
                       child: widget.isStretch
-                          ? Expanded(
-                              child: InkWell(
-                                borderRadius:
-                                    BorderRadius.circular(widget.radius),
-                                onTap: () {
-                                  _onTapItem(item);
-                                },
-                                child: Center(
-                                  child: Container(
-                                    width: widget.fixedWidth,
-                                    padding: EdgeInsets.all(widget.padding),
-                                    decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(widget.radius),
-                                    ),
-                                    child: item.value,
-                                  ),
-                                ),
-                              ),
-                            )
-                          : InkWell(
-                              borderRadius:
-                                  BorderRadius.circular(widget.radius),
-                              onTap: () {
-                                _onTapItem(item);
-                              },
-                              child: Center(
-                                child: Container(
-                                  width: widget.fixedWidth,
-                                  padding: EdgeInsets.all(widget.padding),
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.circular(widget.radius),
-                                  ),
-                                  child: item.value,
-                                ),
-                              ),
-                            ),
+                          ? Expanded(child: segmentItem(item))
+                          : segmentItem(item),
                     ),
                 ],
               ),

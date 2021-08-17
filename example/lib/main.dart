@@ -44,6 +44,36 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push<void>(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return SecondView();
+                      },
+                    ),
+                  );
+                },
+                child: Text('Go to second screen'),
+              ),
+              const SizedBox(height: 20),
+              CustomSlidingSegmentedControl<int>(
+                fromMax: true,
+                children: {
+                  1: Text(
+                    'Segmentation',
+                    textAlign: TextAlign.center,
+                  ),
+                  2: Text(
+                    'Max',
+                    textAlign: TextAlign.center,
+                  ),
+                },
+                onValueChanged: (int value) {
+                  print(value);
+                },
+              ),
+              const SizedBox(height: 20),
               CustomSlidingSegmentedControl<SegmentType>(
                 elevation: 2,
                 initialValue: SegmentType.map,
@@ -59,6 +89,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 },
                 radius: 8,
+                innerPadding: 2,
+                padding: 20,
                 onValueChanged: (v) {
                   print(v);
                 },
@@ -84,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: 16,
                 backgroundColor: Colors.black,
                 thumbColor: Colors.blue,
-                textColor: Colors.white,
+                // textColor: Colors.white,
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeInToLinear,
                 onValueChanged: (SegmentType v) {
@@ -95,9 +127,11 @@ class _MyHomePageState extends State<MyHomePage> {
               CustomSlidingSegmentedControl<SegmentType>(
                 elevation: 2,
                 children: {
-                  SegmentType.news: Text('Новости'),
-                  SegmentType.map: Text('Карты'),
-                  SegmentType.paper: Text('Список'),
+                  SegmentType.news:
+                      Text('Новости', textAlign: TextAlign.center),
+                  SegmentType.map: Text('Карты', textAlign: TextAlign.center),
+                  SegmentType.paper:
+                      Text('Список', textAlign: TextAlign.center),
                 },
                 radius: 8,
                 decoration: BoxDecoration(
@@ -119,9 +153,11 @@ class _MyHomePageState extends State<MyHomePage> {
               CustomSlidingSegmentedControl<SegmentType>(
                 elevation: 2,
                 children: {
-                  SegmentType.news: Text('Новости'),
-                  SegmentType.map: Text('Карты'),
-                  SegmentType.paper: Text('Список'),
+                  SegmentType.news:
+                      Text('Новости', textAlign: TextAlign.center),
+                  SegmentType.map: Text('Карты', textAlign: TextAlign.center),
+                  SegmentType.paper:
+                      Text('Список', textAlign: TextAlign.center),
                 },
                 onValueChanged: (SegmentType v) {
                   print(v);
@@ -130,9 +166,9 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<int>(
                 children: {
-                  0: Text('Новости'),
-                  1: Text('Карты'),
-                  2: Text('Список'),
+                  0: Text('Новости', textAlign: TextAlign.center),
+                  1: Text('Карты', textAlign: TextAlign.center),
+                  2: Text('Список', textAlign: TextAlign.center),
                 },
                 duration: Duration(milliseconds: 200),
                 radius: 30.0,
@@ -158,9 +194,9 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<String>(
                 children: {
-                  'Новости': Text('Новости'),
-                  'Карты': Text('Карты'),
-                  'Список': Text('Список'),
+                  'Новости': Text('Новости', textAlign: TextAlign.center),
+                  'Карты': Text('Карты', textAlign: TextAlign.center),
+                  'Список': Text('Список', textAlign: TextAlign.center),
                 },
                 duration: Duration(milliseconds: 200),
                 radius: 0.0,
@@ -172,9 +208,11 @@ class _MyHomePageState extends State<MyHomePage> {
               CustomSlidingSegmentedControl<SegmentType>(
                 innerPadding: 4,
                 children: {
-                  SegmentType.news: Text('Новости'),
-                  SegmentType.map: Text('Карты'),
-                  SegmentType.paper: Text('Список'),
+                  SegmentType.news:
+                      Text('Новости', textAlign: TextAlign.center),
+                  SegmentType.map: Text('Карты', textAlign: TextAlign.center),
+                  SegmentType.paper:
+                      Text('Список', textAlign: TextAlign.center),
                 },
                 radius: 10,
                 elevation: 8,
@@ -185,9 +223,11 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<SegmentType>(
                 children: {
-                  SegmentType.news: Text('Новости'),
-                  SegmentType.map: Text('Карты'),
-                  SegmentType.paper: Text('Список'),
+                  SegmentType.news:
+                      Text('Новости', textAlign: TextAlign.center),
+                  SegmentType.map: Text('Карты', textAlign: TextAlign.center),
+                  SegmentType.paper:
+                      Text('Список', textAlign: TextAlign.center),
                 },
                 elevation: 0,
                 onValueChanged: (SegmentType v) {
@@ -200,39 +240,29 @@ class _MyHomePageState extends State<MyHomePage> {
                   SegmentType.news: Text(
                     'Новости',
                     style: TextStyle(color: Colors.white),
+                    textAlign: TextAlign.center,
                   ),
                   SegmentType.map: Text(
                     'Карты',
                     style: TextStyle(color: Colors.white),
+                    textAlign: TextAlign.center,
                   ),
                   SegmentType.paper: Text(
                     'Список',
                     style: TextStyle(color: Colors.white),
+                    textAlign: TextAlign.center,
                   ),
                 },
                 elevation: 0,
                 innerPadding: 0,
                 backgroundColor: Colors.black,
                 thumbColor: Colors.blue,
-                textColor: Colors.white,
+                // textColor: Colors.white,
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeInToLinear,
                 onValueChanged: (SegmentType v) {
                   print(v);
                 },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push<void>(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return SecondView();
-                      },
-                    ),
-                  );
-                },
-                child: Text('Second screen'),
               ),
               const SizedBox(height: 20),
             ],
@@ -303,7 +333,7 @@ class SecondView extends StatelessWidget {
                 padding: 16,
                 backgroundColor: Colors.black,
                 thumbColor: Colors.blue,
-                textColor: Colors.white,
+                // textColor: Colors.white,
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeInToLinear,
                 onValueChanged: (SegmentType v) {
