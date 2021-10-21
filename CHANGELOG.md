@@ -1,3 +1,10 @@
+# 1.3.0
+
+## Feat
+
+- update min sdk and flutter version
+- update example
+
 # 1.2.1
 
 ## Feat
