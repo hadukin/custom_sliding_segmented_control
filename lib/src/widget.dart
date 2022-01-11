@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:custom_sliding_segmented_control/src/animation_panel.dart';
 import 'package:custom_sliding_segmented_control/src/compute_offset.dart';
 import 'package:custom_sliding_segmented_control/src/measure_size.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 /// Example:
 ///
@@ -59,12 +59,14 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.padding = 12,
     this.fixedWidth,
     this.decoration,
+    this.thumbDecoration,
     this.isStretch = false,
     this.fromMax = false,
     this.clipBehavior = Clip.none,
   })  : assert(children.length != 0),
         super(key: key);
   final BoxDecoration? decoration;
+  final BoxDecoration? thumbDecoration;
   final ValueChanged<T>? onValueChanged;
   final Duration? duration;
   final double radius;
@@ -192,6 +194,7 @@ class _CustomSlidingSegmentedControlState<T>
                 elevation: widget.elevation,
                 color: widget.thumbColor,
                 curve: widget.curve,
+                decoration: widget.thumbDecoration,
               ),
               Row(
                 children: [
