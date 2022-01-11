@@ -1,3 +1,10 @@
+# 1.3.1
+
+## Feat
+
+- add new property `thumbDecoration` to pass custom BoxDecoration for thumb
+- fix rtl transition problem
+
 # 1.3.0
 
 ## Feat
