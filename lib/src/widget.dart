@@ -56,7 +56,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.thumbColor = CupertinoColors.white,
     this.curve = Curves.easeInOut,
     this.innerPadding = 2.0,
-    this.padding = 12,
+    this.padding = const EdgeInsets.all(12),
     this.fixedWidth,
     this.decoration,
     this.thumbDecoration,
@@ -75,7 +75,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final Color thumbColor;
   final Curve curve;
   final double innerPadding;
-  final double padding;
+  final EdgeInsetsGeometry padding;
   final double? fixedWidth;
   final Map<T, Widget> children;
   final bool isStretch;
@@ -159,7 +159,7 @@ class _CustomSlidingSegmentedControlState<T>
       child: Center(
         child: Container(
           width: maxSize ?? widget.fixedWidth,
-          padding: EdgeInsets.all(widget.padding),
+          padding: widget.padding,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(widget.radius),
           ),
@@ -197,6 +197,7 @@ class _CustomSlidingSegmentedControlState<T>
                 decoration: widget.thumbDecoration,
               ),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   for (final item in widget.children.entries)
                     MeasureSize(
