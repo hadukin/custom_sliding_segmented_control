@@ -12,15 +12,23 @@ import 'package:flutter/material.dart';
 /// CustomSlidingSegmentedControl<int>(
 ///   fromMax: true,
 ///   children: {
-///     1: Text(
-///       'Segmentation',
-///       textAlign: TextAlign.center,
-///     ),
-///     2: Text(
-///       'Max',
-///       textAlign: TextAlign.center,
-///     ),
+///     1: Text('Segmentation'),
+///     2: Text('Max'),
 ///   },
+///   thumbDecoration: BoxDecoration(
+///     color: Colors.white,
+///     boxShadow: [
+///       BoxShadow(
+///         color: Colors.black.withOpacity(.3),
+///         blurRadius: 4.0,
+///         spreadRadius: 1.0,
+///         offset: Offset(
+///           0.0,
+///           2.0,
+///         ),
+///       ),
+///     ],
+///   ),
 ///   onValueChanged: (int value) {
 ///     print(value);
 ///   },
@@ -43,17 +51,16 @@ import 'package:flutter/material.dart';
 /// * `decoration` - decoration for controls
 /// * `padding` - item padding
 /// * `clipBehavior` - for container
+/// * `thumbDecoration` - decoration for animation thumb
 class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   const CustomSlidingSegmentedControl({
     Key? key,
     required this.children,
-    this.onValueChanged,
+    required this.onValueChanged,
     this.initialValue,
     this.duration,
     this.radius = 4.0,
-    this.elevation = 2.0,
-    this.backgroundColor = CupertinoColors.systemGrey4,
-    this.thumbColor = CupertinoColors.white,
+    this.backgroundColor = CupertinoColors.tertiarySystemFill,
     this.curve = Curves.easeInOut,
     this.innerPadding = 2.0,
     this.padding = const EdgeInsets.all(12),
@@ -63,16 +70,17 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.isStretch = false,
     this.fromMax = false,
     this.clipBehavior = Clip.none,
+    this.splashColor = Colors.transparent,
+    this.splashFactory = NoSplash.splashFactory,
+    this.highlightColor = Colors.transparent,
   })  : assert(children.length != 0),
         super(key: key);
   final BoxDecoration? decoration;
   final BoxDecoration? thumbDecoration;
-  final ValueChanged<T>? onValueChanged;
+  final ValueChanged<T> onValueChanged;
   final Duration? duration;
   final double radius;
-  final double elevation;
   final Color backgroundColor;
-  final Color thumbColor;
   final Curve curve;
   final double innerPadding;
   final EdgeInsetsGeometry padding;
@@ -82,6 +90,9 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final T? initialValue;
   final bool fromMax;
   final Clip clipBehavior;
+  final Color? splashColor;
+  final InteractiveInkFeatureFactory? splashFactory;
+  final Color? highlightColor;
 
   @override
   _CustomSlidingSegmentedControlState<T> createState() =>
@@ -145,26 +156,25 @@ class _CustomSlidingSegmentedControlState<T>
     );
     setState(() => offset = _offset);
     final _value = _keys[_keys.indexOf(current)]!;
-    if (widget.onValueChanged != null) {
-      widget.onValueChanged!(_value);
-    }
+    widget.onValueChanged(_value);
   }
 
   Widget segmentItem(MapEntry<T, Widget> item) {
     return InkWell(
+      splashColor: widget.splashColor,
+      splashFactory: widget.splashFactory,
+      highlightColor: widget.highlightColor,
       borderRadius: BorderRadius.circular(widget.radius),
       onTap: () {
         _onTapItem(item);
       },
-      child: Center(
-        child: Container(
-          width: maxSize ?? widget.fixedWidth,
-          padding: widget.padding,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(widget.radius),
-          ),
-          child: item.value,
+      child: Container(
+        width: maxSize ?? widget.fixedWidth,
+        padding: widget.padding,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(widget.radius),
         ),
+        child: Center(child: item.value),
       ),
     );
   }
@@ -172,13 +182,18 @@ class _CustomSlidingSegmentedControlState<T>
   Widget layout() {
     return Container(
       clipBehavior: widget.clipBehavior,
-      decoration: widget.decoration ??
-          BoxDecoration(
-            color: widget.backgroundColor,
-            borderRadius: BorderRadius.circular(
-              widget.radius != 0 ? widget.radius + 2 : widget.radius,
+      decoration: widget.decoration != null
+          ? widget.decoration?.copyWith(
+              borderRadius: BorderRadius.circular(
+                widget.radius != 0 ? widget.radius : widget.radius,
+              ),
+            )
+          : BoxDecoration(
+              color: widget.backgroundColor,
+              borderRadius: BorderRadius.circular(
+                widget.radius != 0 ? widget.radius : widget.radius,
+              ),
             ),
-          ),
       padding: EdgeInsets.all(widget.innerPadding),
       child: Column(
         children: [
@@ -191,13 +206,10 @@ class _CustomSlidingSegmentedControlState<T>
                 width: sizes[current],
                 duration: widget.duration,
                 radius: widget.radius,
-                elevation: widget.elevation,
-                color: widget.thumbColor,
                 curve: widget.curve,
                 decoration: widget.thumbDecoration,
               ),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   for (final item in widget.children.entries)
                     MeasureSize(

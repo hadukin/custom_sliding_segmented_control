@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 
@@ -12,10 +13,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: ThemeData.light(),
+      // theme: ThemeData.dark(),
       home: MyHomePage(),
     );
   }
@@ -29,6 +28,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  BorderRadius dynamicBorder = BorderRadius.only(
+    topLeft: Radius.circular(20),
+    bottomLeft: Radius.circular(20),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,6 +61,98 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<int>(
+                radius: 20,
+                fromMax: true,
+                innerPadding: 0,
+                children: {
+                  0: Text("FLIGHTS"),
+                  1: Text("TRAINS"),
+                  2: Text("HOTELS")
+                },
+                thumbDecoration: BoxDecoration(
+                  borderRadius: dynamicBorder,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment(0.7, 0.0),
+                    colors: [
+                      const Color(0xff5851db),
+                      const Color(0xffe1306c),
+                    ],
+                  ),
+                ),
+                onValueChanged: (int value) {
+                  print(value);
+                  switch (value) {
+                    case 0:
+                      setState(() {
+                        dynamicBorder = BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(0),
+                          topRight: Radius.circular(0),
+                        );
+                      });
+                      break;
+                    case 1:
+                      setState(() {
+                        dynamicBorder = BorderRadius.only(
+                          topLeft: Radius.circular(0),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(0),
+                          topRight: Radius.circular(0),
+                        );
+                      });
+                      break;
+                    case 2:
+                      setState(() {
+                        dynamicBorder = BorderRadius.only(
+                          topLeft: Radius.circular(0),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        );
+                      });
+                      break;
+                    default:
+                  }
+                },
+              ),
+              const SizedBox(height: 20),
+              Directionality(
+                textDirection: TextDirection.rtl,
+                child: CustomSlidingSegmentedControl<int>(
+                  thumbDecoration: BoxDecoration(
+                    // color: Colors.greenAccent,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(.3),
+                        blurRadius: 4.0,
+                        spreadRadius: 1.0,
+                        offset: Offset(
+                          0.0,
+                          2.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  fromMax: true,
+                  children: {
+                    1: Text(
+                      'Directionality',
+                      textAlign: TextAlign.center,
+                    ),
+                    2: Text(
+                      'Rtl',
+                      textAlign: TextAlign.center,
+                    ),
+                  },
+                  onValueChanged: (int value) {
+                    print(value);
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              CustomSlidingSegmentedControl<int>(
                 fromMax: true,
                 children: {
                   1: Text(
@@ -74,16 +170,15 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<SegmentType>(
-                elevation: 2,
                 initialValue: SegmentType.map,
                 isStretch: true,
                 children: {
                   SegmentType.news: Text(
-                    'Новости',
+                    'Flights',
                     textAlign: TextAlign.center,
                   ),
                   SegmentType.map: Text(
-                    'Карты',
+                    'Map',
                     textAlign: TextAlign.center,
                   ),
                 },
@@ -99,24 +194,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 initialValue: SegmentType.map,
                 children: {
                   SegmentType.news: Text(
-                    'Новостной портал',
+                    'News daily portal',
                     style: TextStyle(color: Colors.white),
                   ),
                   SegmentType.map: Text(
-                    'Карты',
+                    'Map',
                     style: TextStyle(color: Colors.white),
                   ),
                   SegmentType.paper: Text(
-                    'Список',
+                    'Flights',
                     style: TextStyle(color: Colors.white),
                   ),
                 },
-                elevation: 0,
                 innerPadding: 2,
                 padding: EdgeInsets.all(16),
                 backgroundColor: Colors.black,
-                thumbColor: Colors.blue,
-                // textColor: Colors.white,
+                thumbDecoration: BoxDecoration(color: Colors.blue),
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeInToLinear,
                 onValueChanged: (SegmentType v) {
@@ -125,15 +218,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<SegmentType>(
-                elevation: 2,
                 children: {
-                  SegmentType.news:
-                      Text('Новости', textAlign: TextAlign.center),
-                  SegmentType.map: Text('Карты', textAlign: TextAlign.center),
-                  SegmentType.paper:
-                      Text('Список', textAlign: TextAlign.center),
+                  SegmentType.news: Text('News'),
+                  SegmentType.map: Text('Map'),
+                  SegmentType.paper: Text('Flights'),
                 },
                 radius: 8,
+                thumbDecoration: BoxDecoration(color: Colors.white),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   gradient: LinearGradient(
@@ -151,13 +242,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<SegmentType>(
-                elevation: 2,
                 children: {
-                  SegmentType.news:
-                      Text('Новости', textAlign: TextAlign.center),
-                  SegmentType.map: Text('Карты', textAlign: TextAlign.center),
-                  SegmentType.paper:
-                      Text('Список', textAlign: TextAlign.center),
+                  SegmentType.news: Text('News'),
+                  SegmentType.map: Text('Map'),
+                  SegmentType.paper: Text('Flights'),
                 },
                 onValueChanged: (SegmentType v) {
                   print(v);
@@ -166,9 +254,9 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<int>(
                 children: {
-                  0: Text('Новости', textAlign: TextAlign.center),
-                  1: Text('Карты', textAlign: TextAlign.center),
-                  2: Text('Список', textAlign: TextAlign.center),
+                  0: Text('News'),
+                  1: Text('Map'),
+                  2: Text('Flights'),
                 },
                 duration: Duration(milliseconds: 200),
                 radius: 30.0,
@@ -180,13 +268,11 @@ class _MyHomePageState extends State<MyHomePage> {
               CustomSlidingSegmentedControl<SegmentType>(
                 fixedWidth: 100,
                 children: {
-                  SegmentType.news:
-                      Text('Новости', textAlign: TextAlign.center),
-                  SegmentType.map: Text('1', textAlign: TextAlign.center),
-                  SegmentType.paper: Text('2', textAlign: TextAlign.center),
+                  SegmentType.news: Text('Flights'),
+                  SegmentType.map: Text('1'),
+                  SegmentType.paper: Text('2'),
                 },
                 radius: 5,
-                elevation: 8,
                 onValueChanged: (SegmentType v) {
                   print(v);
                 },
@@ -194,9 +280,9 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<String>(
                 children: {
-                  'Новости': Text('Новости', textAlign: TextAlign.center),
-                  'Карты': Text('Карты', textAlign: TextAlign.center),
-                  'Список': Text('Список', textAlign: TextAlign.center),
+                  'News': Text('News'),
+                  'Map': Text('Map'),
+                  'Flights': Text('Flights'),
                 },
                 duration: Duration(milliseconds: 200),
                 radius: 0.0,
@@ -208,14 +294,24 @@ class _MyHomePageState extends State<MyHomePage> {
               CustomSlidingSegmentedControl<SegmentType>(
                 innerPadding: 4,
                 children: {
-                  SegmentType.news:
-                      Text('Новости', textAlign: TextAlign.center),
-                  SegmentType.map: Text('Карты', textAlign: TextAlign.center),
-                  SegmentType.paper:
-                      Text('Список', textAlign: TextAlign.center),
+                  SegmentType.news: Text('News'),
+                  SegmentType.map: Text('Map'),
+                  SegmentType.paper: Text('Flight'),
                 },
                 radius: 10,
-                elevation: 8,
+                thumbDecoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(.2),
+                      blurRadius: 4.0,
+                      spreadRadius: 1.0,
+                      offset: Offset(
+                        0.0,
+                        2.0,
+                      ),
+                    ),
+                  ],
+                ),
                 onValueChanged: (SegmentType v) {
                   print(v);
                 },
@@ -223,13 +319,10 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<SegmentType>(
                 children: {
-                  SegmentType.news:
-                      Text('Новости', textAlign: TextAlign.center),
-                  SegmentType.map: Text('Карты', textAlign: TextAlign.center),
-                  SegmentType.paper:
-                      Text('Список', textAlign: TextAlign.center),
+                  SegmentType.news: Text('Flights'),
+                  SegmentType.map: Text('Map'),
+                  SegmentType.paper: Text('News'),
                 },
-                elevation: 0,
                 onValueChanged: (SegmentType v) {
                   print(v);
                 },
@@ -238,26 +331,24 @@ class _MyHomePageState extends State<MyHomePage> {
               CustomSlidingSegmentedControl<SegmentType>(
                 children: {
                   SegmentType.news: Text(
-                    'Новости',
+                    'Flight',
                     style: TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                   SegmentType.map: Text(
-                    'Карты',
+                    'News',
                     style: TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                   SegmentType.paper: Text(
-                    'Список',
+                    'Map',
                     style: TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                 },
-                elevation: 0,
                 innerPadding: 0,
                 backgroundColor: Colors.black,
-                thumbColor: Colors.blue,
-                // textColor: Colors.white,
+                thumbDecoration: BoxDecoration(color: Colors.blue),
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeInToLinear,
                 onValueChanged: (SegmentType v) {
@@ -289,20 +380,19 @@ class SecondView extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<SegmentType>(
-                elevation: 2,
                 initialValue: SegmentType.paper,
                 isStretch: true,
                 children: {
                   SegmentType.news: Text(
-                    'Новости',
+                    'Flights',
                     textAlign: TextAlign.center,
                   ),
                   SegmentType.map: Text(
-                    'Карты',
+                    'Map',
                     textAlign: TextAlign.center,
                   ),
                   SegmentType.paper: Text(
-                    'Список',
+                    'News',
                     textAlign: TextAlign.center,
                   ),
                 },
@@ -316,24 +406,22 @@ class SecondView extends StatelessWidget {
                 initialValue: SegmentType.map,
                 children: {
                   SegmentType.news: Text(
-                    'Новостной портал',
+                    'News daily portal',
                     style: TextStyle(color: Colors.white),
                   ),
                   SegmentType.map: Text(
-                    'Карты',
+                    'Map',
                     style: TextStyle(color: Colors.white),
                   ),
                   SegmentType.paper: Text(
-                    'Список',
+                    'Flights',
                     style: TextStyle(color: Colors.white),
                   ),
                 },
-                elevation: 0,
                 innerPadding: 2,
                 padding: EdgeInsets.all(16),
                 backgroundColor: Colors.black,
-                thumbColor: Colors.blue,
-                // textColor: Colors.white,
+                thumbDecoration: BoxDecoration(color: Colors.blue),
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeInToLinear,
                 onValueChanged: (SegmentType v) {

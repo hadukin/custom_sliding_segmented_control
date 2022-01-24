@@ -1,3 +1,14 @@
+# 1.4.0
+
+## Breaking changes
+
+- remove property `elevation` -> use `boxShadow` in `thumbDecoration`
+- remove property `thumbColor` -> use `color` in `thumbDecoration`
+- required `onValueChanged`
+- new property `splashColor`
+- new property `splashFactory`
+- new property `highlightColor`
+
 # 1.3.1
 
 ## Feat
