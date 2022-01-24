@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 
@@ -90,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 radius: 8,
                 innerPadding: 2,
-                padding: 20,
+                padding: EdgeInsets.all(20),
                 onValueChanged: (v) {
                   print(v);
                 },
@@ -114,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 elevation: 0,
                 innerPadding: 2,
-                padding: 16,
+                padding: EdgeInsets.all(16),
                 backgroundColor: Colors.black,
                 thumbColor: Colors.blue,
                 // textColor: Colors.white,
@@ -331,7 +330,7 @@ class SecondView extends StatelessWidget {
                 },
                 elevation: 0,
                 innerPadding: 2,
-                padding: 16,
+                padding: EdgeInsets.all(16),
                 backgroundColor: Colors.black,
                 thumbColor: Colors.blue,
                 // textColor: Colors.white,
