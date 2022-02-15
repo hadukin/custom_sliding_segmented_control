@@ -40,7 +40,8 @@ import 'package:flutter/material.dart';
 /// * `children` - segment items map
 /// * `initialValue` - initial segment
 /// * `duration` - speed animation
-/// * `radius` - segment and AnimationPanel border radius
+/// * `radius` - AnimationPanel border radius
+/// * `segmentRadius` - segment border radius
 /// * `elevation` - elevation
 /// * `backgroundColor` - background color
 /// * `thumbColor` - AnimationPanel color
@@ -60,6 +61,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.initialValue,
     this.duration,
     this.radius = 4.0,
+    this.segmentRadius,
     this.backgroundColor = CupertinoColors.tertiarySystemFill,
     this.curve = Curves.easeInOut,
     this.innerPadding = 2.0,
@@ -80,6 +82,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final ValueChanged<T> onValueChanged;
   final Duration? duration;
   final double radius;
+  final double? segmentRadius;
   final Color backgroundColor;
   final Curve curve;
   final double innerPadding;
@@ -172,7 +175,8 @@ class _CustomSlidingSegmentedControlState<T>
         width: maxSize ?? widget.fixedWidth,
         padding: widget.padding,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(widget.radius),
+          borderRadius:
+              BorderRadius.circular(widget.segmentRadius ?? widget.radius),
         ),
         child: Center(child: item.value),
       ),
