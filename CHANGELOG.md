@@ -1,3 +1,13 @@
+# 1.5.0
+
+## Breaking changes
+
+- use `decoration` for decoration main panel
+- use `thumbDecoration` for decoraton animated panel
+- add property `height`
+- remove property `backgroundColor`
+- remove property `radius`
+
 # 1.4.0
 
 ## Breaking changes

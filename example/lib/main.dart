@@ -47,28 +47,71 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push<void>(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return SecondView();
-                      },
-                    ),
-                  );
+              CustomSlidingSegmentedControl<int>(
+                initialValue: 2,
+                height: 24,
+                children: {
+                  1: Text('News daily portal'),
+                  2: Text('Map'),
+                  3: Text('Paper'),
                 },
-                child: Text('Go to second screen'),
+                decoration: BoxDecoration(
+                  color: CupertinoColors.lightBackgroundGray,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                thumbDecoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(6),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(.3),
+                      blurRadius: 4.0,
+                      spreadRadius: 1.0,
+                      offset: Offset(
+                        0.0,
+                        2.0,
+                      ),
+                    ),
+                  ],
+                ),
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInToLinear,
+                onValueChanged: (v) {
+                  print(v);
+                },
               ),
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<int>(
-                radius: 20,
+                children: {
+                  1: Text(
+                    'Segmentation',
+                    textAlign: TextAlign.center,
+                  ),
+                  2: Text(
+                    'Max',
+                    textAlign: TextAlign.center,
+                  ),
+                },
+                onValueChanged: (int value) {
+                  print(value);
+                },
+              ),
+              const SizedBox(height: 20),
+              CustomSlidingSegmentedControl<int>(
+                // radius: 20,
                 fromMax: true,
+                height: 30,
                 innerPadding: 0,
                 children: {
                   0: Text("FLIGHTS"),
                   1: Text("TRAINS"),
-                  2: Text("HOTELS")
+                  2: Text("HOTELS"),
                 },
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: 20,
                 thumbDecoration: BoxDecoration(
                   borderRadius: dynamicBorder,
                   gradient: LinearGradient(
@@ -118,11 +161,99 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               const SizedBox(height: 20),
+              CustomSlidingSegmentedControl<int>(
+                initialValue: 2,
+                children: {
+                  1: Text(
+                    'News daily portal',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  2: Text(
+                    'Map',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  3: Text(
+                    'Paper',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                },
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                thumbDecoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInToLinear,
+                onValueChanged: (v) {
+                  print(v);
+                },
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: CustomSlidingSegmentedControl<SegmentType>(
+                  initialValue: SegmentType.map,
+                  isStretch: true,
+                  children: {
+                    SegmentType.news: Text(
+                      'Flights',
+                      textAlign: TextAlign.center,
+                    ),
+                    SegmentType.map: Text(
+                      'Map',
+                      textAlign: TextAlign.center,
+                    ),
+                  },
+                  innerPadding: 2,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  thumbDecoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  onValueChanged: (v) {
+                    print(v);
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              CustomSlidingSegmentedControl<SegmentType>(
+                children: {
+                  SegmentType.news: Text('News'),
+                  SegmentType.map: Text('Map'),
+                  SegmentType.paper: Text('Flights'),
+                },
+                // radius: 8,
+                thumbDecoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(7),
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment(0.7, 0.0),
+                    colors: [
+                      const Color(0xffee0000),
+                      const Color(0xffeeee00),
+                    ],
+                  ),
+                ),
+                onValueChanged: (v) {
+                  print(v);
+                },
+              ),
+              const SizedBox(height: 20),
               Directionality(
                 textDirection: TextDirection.rtl,
                 child: CustomSlidingSegmentedControl<int>(
                   thumbDecoration: BoxDecoration(
-                    // color: Colors.greenAccent,
+                    color: Colors.white,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(.3),
@@ -164,145 +295,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     textAlign: TextAlign.center,
                   ),
                 },
-                onValueChanged: (int value) {
-                  print(value);
-                },
-              ),
-              const SizedBox(height: 20),
-              CustomSlidingSegmentedControl<SegmentType>(
-                initialValue: SegmentType.map,
-                isStretch: true,
-                children: {
-                  SegmentType.news: Text(
-                    'Flights',
-                    textAlign: TextAlign.center,
-                  ),
-                  SegmentType.map: Text(
-                    'Map',
-                    textAlign: TextAlign.center,
-                  ),
-                },
-                radius: 8,
-                innerPadding: 2,
-                padding: EdgeInsets.all(20),
-                onValueChanged: (v) {
-                  print(v);
-                },
-              ),
-              const SizedBox(height: 20),
-              CustomSlidingSegmentedControl<SegmentType>(
-                initialValue: SegmentType.map,
-                children: {
-                  SegmentType.news: Text(
-                    'News daily portal',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  SegmentType.map: Text(
-                    'Map',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  SegmentType.paper: Text(
-                    'Flights',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                },
-                innerPadding: 2,
-                padding: EdgeInsets.all(16),
-                backgroundColor: Colors.black,
-                thumbDecoration: BoxDecoration(color: Colors.blue),
-                duration: Duration(milliseconds: 300),
-                curve: Curves.easeInToLinear,
-                onValueChanged: (SegmentType v) {
-                  print(v);
-                },
-              ),
-              const SizedBox(height: 20),
-              CustomSlidingSegmentedControl<SegmentType>(
-                children: {
-                  SegmentType.news: Text('News'),
-                  SegmentType.map: Text('Map'),
-                  SegmentType.paper: Text('Flights'),
-                },
-                radius: 8,
-                thumbDecoration: BoxDecoration(color: Colors.white),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment(0.7, 0.0),
-                    colors: [
-                      const Color(0xffee0000),
-                      const Color(0xffeeee00)
-                    ], // red to yellow
-                  ),
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                onValueChanged: (v) {
-                  print(v);
-                },
-              ),
-              const SizedBox(height: 20),
-              CustomSlidingSegmentedControl<SegmentType>(
-                children: {
-                  SegmentType.news: Text('News'),
-                  SegmentType.map: Text('Map'),
-                  SegmentType.paper: Text('Flights'),
-                },
-                onValueChanged: (SegmentType v) {
-                  print(v);
-                },
-              ),
-              const SizedBox(height: 20),
-              CustomSlidingSegmentedControl<int>(
-                children: {
-                  0: Text('News'),
-                  1: Text('Map'),
-                  2: Text('Flights'),
-                },
-                duration: Duration(milliseconds: 200),
-                radius: 30.0,
-                onValueChanged: (int index) {
-                  print(index);
-                },
-              ),
-              const SizedBox(height: 20),
-              CustomSlidingSegmentedControl<SegmentType>(
-                fixedWidth: 100,
-                children: {
-                  SegmentType.news: Text('Flights'),
-                  SegmentType.map: Text('1'),
-                  SegmentType.paper: Text('2'),
-                },
-                radius: 5,
-                onValueChanged: (SegmentType v) {
-                  print(v);
-                },
-              ),
-              const SizedBox(height: 20),
-              CustomSlidingSegmentedControl<String>(
-                children: {
-                  'News': Text('News'),
-                  'Map': Text('Map'),
-                  'Flights': Text('Flights'),
-                },
-                duration: Duration(milliseconds: 200),
-                radius: 0.0,
-                onValueChanged: (String v) {
-                  print(v);
-                },
-              ),
-              const SizedBox(height: 20),
-              CustomSlidingSegmentedControl<SegmentType>(
-                innerPadding: 4,
-                children: {
-                  SegmentType.news: Text('News'),
-                  SegmentType.map: Text('Map'),
-                  SegmentType.paper: Text('Flight'),
-                },
-                radius: 10,
                 thumbDecoration: BoxDecoration(
+                  color: Colors.greenAccent,
+                  borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(.2),
+                      color: Colors.black.withOpacity(.3),
                       blurRadius: 4.0,
                       spreadRadius: 1.0,
                       offset: Offset(
@@ -312,48 +314,43 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ],
                 ),
-                onValueChanged: (SegmentType v) {
-                  print(v);
+                onValueChanged: (int value) {
+                  print(value);
                 },
               ),
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<SegmentType>(
+                initialValue: SegmentType.news,
                 children: {
-                  SegmentType.news: Text('Flights'),
-                  SegmentType.map: Text('Map'),
-                  SegmentType.paper: Text('News'),
-                },
-                onValueChanged: (SegmentType v) {
-                  print(v);
-                },
-              ),
-              const SizedBox(height: 20),
-              CustomSlidingSegmentedControl<SegmentType>(
-                children: {
-                  SegmentType.news: Text(
-                    'Flight',
-                    style: TextStyle(color: Colors.white),
+                  SegmentType.paper: Text(
+                    'Paper',
                     textAlign: TextAlign.center,
                   ),
                   SegmentType.map: Text(
-                    'News',
-                    style: TextStyle(color: Colors.white),
+                    'Map',
                     textAlign: TextAlign.center,
                   ),
-                  SegmentType.paper: Text(
-                    'Map',
-                    style: TextStyle(color: Colors.white),
+                  SegmentType.news: Text(
+                    'News',
                     textAlign: TextAlign.center,
                   ),
                 },
-                innerPadding: 0,
-                backgroundColor: Colors.black,
-                thumbDecoration: BoxDecoration(color: Colors.blue),
-                duration: Duration(milliseconds: 300),
-                curve: Curves.easeInToLinear,
-                onValueChanged: (SegmentType v) {
+                onValueChanged: (v) {
                   print(v);
                 },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push<void>(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return SecondView();
+                      },
+                    ),
+                  );
+                },
+                child: Text('Go to second screen'),
               ),
               const SizedBox(height: 20),
             ],
@@ -396,7 +393,7 @@ class SecondView extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 },
-                radius: 8,
+                // radius: 8,
                 onValueChanged: (v) {
                   print(v);
                 },
@@ -419,8 +416,8 @@ class SecondView extends StatelessWidget {
                   ),
                 },
                 innerPadding: 2,
-                padding: EdgeInsets.all(16),
-                backgroundColor: Colors.black,
+                // padding: EdgeInsets.all(16),
+                // backgroundColor: Colors.black,
                 thumbDecoration: BoxDecoration(color: Colors.blue),
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeInToLinear,

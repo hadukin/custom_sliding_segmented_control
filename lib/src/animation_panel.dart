@@ -8,7 +8,6 @@ class AnimationPanel<T> extends StatelessWidget {
     required this.height,
     required this.hasTouch,
     this.duration,
-    this.radius = 24,
     this.curve,
     this.decoration,
   }) : super(key: key);
@@ -16,7 +15,6 @@ class AnimationPanel<T> extends StatelessWidget {
   final double offset;
   final double? width;
   final double? height;
-  final double radius;
   final Duration? duration;
   final Curve? curve;
   final bool hasTouch;
@@ -34,16 +32,7 @@ class AnimationPanel<T> extends StatelessWidget {
           : duration ?? const Duration(milliseconds: 200),
       curve: curve!,
       width: width,
-      decoration: decoration?.copyWith(
-            borderRadius:
-                decoration?.borderRadius ?? BorderRadius.circular(radius),
-            color: decoration?.color ?? Colors.white,
-          ) ??
-          BoxDecoration(
-            borderRadius:
-                decoration?.borderRadius ?? BorderRadius.circular(radius),
-            color: decoration?.color ?? Colors.white,
-          ),
+      decoration: decoration,
       height: height,
     );
   }
