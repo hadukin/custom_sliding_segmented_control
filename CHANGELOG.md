@@ -1,4 +1,4 @@
-# 1.5.1
+# 1.5.2
 
 ## Breaking changes
 
