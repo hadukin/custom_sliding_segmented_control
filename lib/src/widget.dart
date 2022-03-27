@@ -57,7 +57,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.initialValue,
     this.duration,
     this.curve = Curves.easeInOut,
-    this.innerPadding = 2.0,
+    this.innerPadding = const EdgeInsets.all(2.0),
     this.padding = 12,
     this.fixedWidth,
     this.decoration = const BoxDecoration(color: CupertinoColors.systemGrey5),
@@ -76,7 +76,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final ValueChanged<T> onValueChanged;
   final Duration? duration;
   final Curve curve;
-  final double innerPadding;
+  final EdgeInsets innerPadding;
   final double padding;
   final double? fixedWidth;
   final Map<T, Widget> children;
@@ -159,7 +159,6 @@ class _CustomSlidingSegmentedControlState<T>
       splashColor: widget.splashColor,
       splashFactory: widget.splashFactory,
       highlightColor: widget.highlightColor,
-      // borderRadius: BorderRadius.circular(widget.radius),
       onTap: () {
         _onTapItem(item);
       },
@@ -176,7 +175,7 @@ class _CustomSlidingSegmentedControlState<T>
     return Container(
       clipBehavior: widget.clipBehavior,
       decoration: widget.decoration,
-      padding: EdgeInsets.all(widget.innerPadding),
+      padding: widget.innerPadding,
       child: Stack(
         children: [
           AnimationPanel<T>(

@@ -1,5 +1,11 @@
 # 1.5.1
 
+## Breaking changes
+
+- change `innerPadding` - `double` -> `EdgeInsets`
+
+# 1.5.1
+
 ## Fix
 
 - Redundant use of Column widget fills space

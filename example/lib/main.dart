@@ -98,10 +98,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<int>(
-                // radius: 20,
                 fromMax: true,
                 height: 30,
-                innerPadding: 0,
+                innerPadding: EdgeInsets.zero,
                 children: {
                   0: Text("FLIGHTS"),
                   1: Text("TRAINS"),
@@ -163,6 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<int>(
                 initialValue: 2,
+                padding: 20,
                 children: {
                   1: Text(
                     'News daily portal',
@@ -207,10 +207,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       textAlign: TextAlign.center,
                     ),
                   },
-                  innerPadding: 2,
+                  innerPadding: EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(14),
                   ),
                   thumbDecoration: BoxDecoration(
                     color: Colors.white,
@@ -228,7 +228,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   SegmentType.map: Text('Map'),
                   SegmentType.paper: Text('Flights'),
                 },
-                // radius: 8,
                 thumbDecoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(7),
@@ -393,7 +392,6 @@ class SecondView extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 },
-                // radius: 8,
                 onValueChanged: (v) {
                   print(v);
                 },
@@ -415,9 +413,7 @@ class SecondView extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                 },
-                innerPadding: 2,
-                // padding: EdgeInsets.all(16),
-                // backgroundColor: Colors.black,
+                innerPadding: EdgeInsets.zero,
                 thumbDecoration: BoxDecoration(color: Colors.blue),
                 duration: Duration(milliseconds: 300),
                 curve: Curves.easeInToLinear,
