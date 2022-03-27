@@ -1,3 +1,9 @@
+# 1.5.1
+
+## Fix
+
+- Redundant use of Column widget fills space
+
 # 1.5.0
 
 ## Breaking changes
