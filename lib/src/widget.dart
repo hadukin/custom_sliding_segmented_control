@@ -177,32 +177,28 @@ class _CustomSlidingSegmentedControlState<T>
       clipBehavior: widget.clipBehavior,
       decoration: widget.decoration,
       padding: EdgeInsets.all(widget.innerPadding),
-      child: Column(
+      child: Stack(
         children: [
-          Stack(
+          AnimationPanel<T>(
+            hasTouch: hasTouch,
+            offset: offset,
+            height: height,
+            width: sizes[current],
+            duration: widget.duration,
+            curve: widget.curve,
+            decoration: widget.thumbDecoration,
+          ),
+          Row(
             children: [
-              AnimationPanel<T>(
-                hasTouch: hasTouch,
-                offset: offset,
-                height: height,
-                width: sizes[current],
-                duration: widget.duration,
-                curve: widget.curve,
-                decoration: widget.thumbDecoration,
-              ),
-              Row(
-                children: [
-                  for (final item in widget.children.entries)
-                    MeasureSize(
-                      onChange: (v) {
-                        _calculateSize(v, item);
-                      },
-                      child: widget.isStretch
-                          ? Expanded(child: segmentItem(item))
-                          : segmentItem(item),
-                    ),
-                ],
-              ),
+              for (final item in widget.children.entries)
+                MeasureSize(
+                  onChange: (v) {
+                    _calculateSize(v, item);
+                  },
+                  child: widget.isStretch
+                      ? Expanded(child: segmentItem(item))
+                      : segmentItem(item),
+                ),
             ],
           ),
         ],
