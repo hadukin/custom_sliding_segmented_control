@@ -1,3 +1,9 @@
+# 1.6.0
+
+## Feat
+
+- Add dynamic initial value
+
 # 1.5.2
 
 ## Breaking changes
