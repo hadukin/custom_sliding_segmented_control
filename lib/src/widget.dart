@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:custom_sliding_segmented_control/src/animation_panel.dart';
+import 'package:custom_sliding_segmented_control/src/cache.dart';
 import 'package:custom_sliding_segmented_control/src/compute_offset.dart';
 import 'package:custom_sliding_segmented_control/src/measure_size.dart';
 import 'package:flutter/cupertino.dart';
@@ -102,24 +103,63 @@ class _CustomSlidingSegmentedControlState<T>
   Map<T?, double> sizes = {};
   bool hasTouch = false;
   double? maxSize;
+  List<Cache<T>> cacheItems = [];
 
   @override
   void initState() {
     super.initState();
-    final List<T?> _list = widget.children.keys.toList();
-    final _index = _list.indexOf(widget.initialValue);
-    final _keys = _list.toList();
-    if (widget.initialValue != null) {
-      current = _keys[_index];
-    } else {
-      current = _keys.first;
+    initialize();
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomSlidingSegmentedControl<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final changeInitial = oldWidget.initialValue != widget.initialValue;
+
+    final changeChildrenLength =
+        oldWidget.children.length != widget.children.length;
+
+    if (changeInitial || changeChildrenLength) {
+      hasTouch = true;
+      initialize(oldCurrent: current, isChangeInitial: changeInitial);
+      for (final cahce in cacheItems) {
+        calculateSize(
+          size: cahce.size,
+          item: cahce.item,
+          isCacheEnabled: false,
+        );
+      }
     }
   }
 
-  void _calculateSize(Size v, MapEntry<T?, Widget> item) {
-    height ??= v.height;
+  void initialize({
+    T? oldCurrent,
+    bool isChangeInitial = false,
+  }) {
+    final List<T?> _list = widget.children.keys.toList();
+    final _index = _list.indexOf(widget.initialValue);
+    final _keys = _list.toList();
+
+    if (!isChangeInitial && oldCurrent != null) {
+      current = oldCurrent;
+    } else {
+      if (widget.initialValue != null) {
+        current = _keys[_index];
+      } else {
+        current = _keys.first;
+      }
+    }
+  }
+
+  void calculateSize({
+    required Size size,
+    required MapEntry<T?, Widget> item,
+    required bool isCacheEnabled,
+  }) {
+    height ??= size.height;
     final Map<T?, double> _temp = {};
-    _temp.putIfAbsent(item.key, () => widget.fixedWidth ?? v.width);
+    _temp.putIfAbsent(item.key, () => widget.fixedWidth ?? size.width);
     if (widget.initialValue != null && widget.initialValue == item.key) {
       final _offset = computeOffset<T>(
         current: current,
@@ -131,6 +171,9 @@ class _CustomSlidingSegmentedControlState<T>
       });
     }
     setState(() {
+      if (isCacheEnabled) {
+        cacheItems.add(Cache<T>(item: item, size: size));
+      }
       sizes = {...sizes, ..._temp};
       if (widget.fromMax) {
         maxSize = sizes.values.toList().reduce(max);
@@ -138,7 +181,7 @@ class _CustomSlidingSegmentedControlState<T>
     });
   }
 
-  void _onTapItem(MapEntry<T?, Widget> item) {
+  void onTapItem(MapEntry<T?, Widget> item) {
     if (!hasTouch) {
       setState(() => hasTouch = true);
     }
@@ -154,13 +197,13 @@ class _CustomSlidingSegmentedControlState<T>
     widget.onValueChanged(_value);
   }
 
-  Widget segmentItem(MapEntry<T, Widget> item) {
+  Widget _segmentItem(MapEntry<T, Widget> item) {
     return InkWell(
       splashColor: widget.splashColor,
       splashFactory: widget.splashFactory,
       highlightColor: widget.highlightColor,
       onTap: () {
-        _onTapItem(item);
+        onTapItem(item);
       },
       child: Container(
         height: widget.height,
@@ -191,12 +234,16 @@ class _CustomSlidingSegmentedControlState<T>
             children: [
               for (final item in widget.children.entries)
                 MeasureSize(
-                  onChange: (v) {
-                    _calculateSize(v, item);
+                  onChange: (value) {
+                    calculateSize(
+                      size: value,
+                      item: item,
+                      isCacheEnabled: true,
+                    );
                   },
                   child: widget.isStretch
-                      ? Expanded(child: segmentItem(item))
-                      : segmentItem(item),
+                      ? Expanded(child: _segmentItem(item))
+                      : _segmentItem(item),
                 ),
             ],
           ),
