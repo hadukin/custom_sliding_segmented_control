@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:custom_sliding_segmented_control/src/animation_panel.dart';
 import 'package:custom_sliding_segmented_control/src/cache.dart';
 import 'package:custom_sliding_segmented_control/src/compute_offset.dart';
+import 'package:custom_sliding_segmented_control/src/custom_segmented_controller.dart';
 import 'package:custom_sliding_segmented_control/src/measure_size.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,6 +71,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.splashFactory = NoSplash.splashFactory,
     this.highlightColor = Colors.transparent,
     this.height = 40,
+    this.controller,
   })  : assert(children.length != 0),
         super(key: key);
   final BoxDecoration? decoration;
@@ -89,6 +91,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final InteractiveInkFeatureFactory? splashFactory;
   final Color? highlightColor;
   final double? height;
+  final CustomSegmentedController<T>? controller;
 
   @override
   _CustomSlidingSegmentedControlState<T> createState() =>
@@ -107,8 +110,15 @@ class _CustomSlidingSegmentedControlState<T>
 
   @override
   void initState() {
+    widget.controller?.addListener(_controllerTap);
     super.initState();
     initialize();
+  }
+
+  @override
+  void dispose() {
+    widget.controller?.removeListener(_controllerTap);
+    super.dispose();
   }
 
   @override
@@ -179,6 +189,15 @@ class _CustomSlidingSegmentedControlState<T>
         maxSize = sizes.values.toList().reduce(max);
       }
     });
+  }
+
+  void _controllerTap() {
+    if (widget.controller!.value == null) return;
+    onTapItem(
+      widget.children.entries.firstWhere(
+        (element) => element.key == widget.controller!.value,
+      ),
+    );
   }
 
   void onTapItem(MapEntry<T?, Widget> item) {
