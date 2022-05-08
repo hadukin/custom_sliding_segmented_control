@@ -192,12 +192,21 @@ class _CustomSlidingSegmentedControlState<T>
   }
 
   void _controllerTap() {
-    if (widget.controller!.value == null) return;
-    onTapItem(
-      widget.children.entries.firstWhere(
-        (element) => element.key == widget.controller!.value,
-      ),
-    );
+    if (widget.controller!.value == null ||
+        current == widget.controller!.value) {
+      return;
+    }
+
+    final entry = widget.children.entries
+        .where(
+          (element) => element.key == widget.controller!.value,
+        )
+        .toList();
+    if (entry.isEmpty) {
+      return;
+    }
+
+    onTapItem(entry.first);
   }
 
   void onTapItem(MapEntry<T?, Widget> item) {
@@ -214,6 +223,7 @@ class _CustomSlidingSegmentedControlState<T>
     setState(() => offset = _offset);
     final _value = _keys[_keys.indexOf(current)]!;
     widget.onValueChanged(_value);
+    widget.controller?.value = current;
   }
 
   Widget _segmentItem(MapEntry<T, Widget> item) {

@@ -291,7 +291,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Directionality(
               textDirection: TextDirection.rtl,
               child: CustomSlidingSegmentedControl<int>(
-              controller: controller,
+                controller: controller,
                 thumbDecoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
