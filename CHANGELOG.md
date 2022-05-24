@@ -1,3 +1,9 @@
+# 1.6.1
+
+## Fix
+
+- WidgetsBinding.instance.addPostFrameCallback failed
+
 # 1.6.0
 
 ## Feat
