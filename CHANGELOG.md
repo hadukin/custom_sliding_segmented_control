@@ -1,3 +1,11 @@
+# 1.7.0
+
+## Update pubspec.yaml
+
+- environment:
+  sdk: ">=2.17.0 <3.0.0"
+  flutter: ">=3.0.0"
+
 # 1.6.1
 
 ## Fix
