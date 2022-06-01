@@ -133,10 +133,10 @@ class _CustomSlidingSegmentedControlState<T>
     if (changeInitial || changeChildrenLength) {
       hasTouch = true;
       initialize(oldCurrent: current, isChangeInitial: changeInitial);
-      for (final cahce in cacheItems) {
+      for (final cache in cacheItems) {
         calculateSize(
-          size: cahce.size,
-          item: cahce.item,
+          size: cache.size,
+          item: cache.item,
           isCacheEnabled: false,
         );
       }
