@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:custom_sliding_segmented_control/src/animation_panel.dart';
 import 'package:custom_sliding_segmented_control/src/cache.dart';
 import 'package:custom_sliding_segmented_control/src/compute_offset.dart';
+import 'package:custom_sliding_segmented_control/src/custom_segmented_controller.dart';
 import 'package:custom_sliding_segmented_control/src/measure_size.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,6 +71,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.splashFactory = NoSplash.splashFactory,
     this.highlightColor = Colors.transparent,
     this.height = 40,
+    this.controller,
   })  : assert(children.length != 0),
         super(key: key);
   final BoxDecoration? decoration;
@@ -89,6 +91,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final InteractiveInkFeatureFactory? splashFactory;
   final Color? highlightColor;
   final double? height;
+  final CustomSegmentedController<T>? controller;
 
   @override
   _CustomSlidingSegmentedControlState<T> createState() =>
@@ -107,8 +110,15 @@ class _CustomSlidingSegmentedControlState<T>
 
   @override
   void initState() {
+    widget.controller?.addListener(_controllerTap);
     super.initState();
     initialize();
+  }
+
+  @override
+  void dispose() {
+    widget.controller?.removeListener(_controllerTap);
+    super.dispose();
   }
 
   @override
@@ -181,6 +191,24 @@ class _CustomSlidingSegmentedControlState<T>
     });
   }
 
+  void _controllerTap() {
+    if (widget.controller!.value == null ||
+        current == widget.controller!.value) {
+      return;
+    }
+
+    final entry = widget.children.entries
+        .where(
+          (element) => element.key == widget.controller!.value,
+        )
+        .toList();
+    if (entry.isEmpty) {
+      return;
+    }
+
+    onTapItem(entry.first);
+  }
+
   void onTapItem(MapEntry<T?, Widget> item) {
     if (!hasTouch) {
       setState(() => hasTouch = true);
@@ -195,6 +223,7 @@ class _CustomSlidingSegmentedControlState<T>
     setState(() => offset = _offset);
     final _value = _keys[_keys.indexOf(current)]!;
     widget.onValueChanged(_value);
+    widget.controller?.value = current;
   }
 
   Widget _segmentItem(MapEntry<T, Widget> item) {

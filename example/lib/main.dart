@@ -1,8 +1,6 @@
-import 'dart:math';
-
+import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 
 void main() {
   runApp(MyApp());
@@ -34,6 +32,13 @@ class _MyHomePageState extends State<MyHomePage> {
   int initial = 1;
   bool isPayment = false;
   int initialValue = 0;
+  late final CustomSegmentedController<int> controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = CustomSegmentedController();
+  }
 
   BorderRadius dynamicBorder = const BorderRadius.only(
     topLeft: Radius.circular(20),
@@ -61,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       initial = 3;
                     });
                   },
-                  child: Text('change initial'),
+                  child: const Text('change initial'),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -69,19 +74,20 @@ class _MyHomePageState extends State<MyHomePage> {
                       isPayment = !isPayment;
                     });
                   },
-                  child: Text('add new segment'),
+                  child: const Text('add new segment'),
                 ),
               ],
             ),
             const SizedBox(height: 20),
             CustomSlidingSegmentedControl<int>(
+              controller: controller,
               initialValue: initial,
               height: 24,
               children: {
-                1: Text('News daily portal'),
-                2: Text('Map'),
-                3: Text('Paper'),
-                if (isPayment) 4: Text('Metal Bord'),
+                1: const Text('News daily portal'),
+                2: const Text('Map'),
+                3: const Text('Paper'),
+                if (isPayment) 4: const Text('Metal Bord'),
               },
               decoration: BoxDecoration(
                 color: CupertinoColors.lightBackgroundGray,
@@ -95,16 +101,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.black.withOpacity(.3),
                     blurRadius: 4.0,
                     spreadRadius: 1.0,
-                    offset: Offset(
+                    offset: const Offset(
                       0.0,
                       2.0,
                     ),
                   ),
                 ],
               ),
-              duration: Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 300),
               curve: Curves.easeInToLinear,
               onValueChanged: (v) {
+                controller.value = v;
                 setState(() {
                   initial = v;
                 });
@@ -112,7 +119,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 20),
             CustomSlidingSegmentedControl<int>(
-              children: {
+              controller: controller,
+              children: const {
                 1: Text(
                   'Segmentation',
                   textAlign: TextAlign.center,
@@ -128,10 +136,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 20),
             CustomSlidingSegmentedControl<int>(
+              controller: controller,
               fromMax: true,
               height: 30,
               innerPadding: EdgeInsets.zero,
-              children: {
+              children: const {
                 0: Text("FLIGHTS"),
                 1: Text("TRAINS"),
                 2: Text("HOTELS"),
@@ -143,12 +152,12 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: 20,
               thumbDecoration: BoxDecoration(
                 borderRadius: dynamicBorder,
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment(0.7, 0.0),
                   colors: [
-                    const Color(0xff5851db),
-                    const Color(0xffe1306c),
+                    Color(0xff5851db),
+                    Color(0xffe1306c),
                   ],
                 ),
               ),
@@ -157,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 switch (value) {
                   case 0:
                     setState(() {
-                      dynamicBorder = BorderRadius.only(
+                      dynamicBorder = const BorderRadius.only(
                         topLeft: Radius.circular(20),
                         bottomLeft: Radius.circular(20),
                         bottomRight: Radius.circular(0),
@@ -167,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     break;
                   case 1:
                     setState(() {
-                      dynamicBorder = BorderRadius.only(
+                      dynamicBorder = const BorderRadius.only(
                         topLeft: Radius.circular(0),
                         bottomLeft: Radius.circular(0),
                         bottomRight: Radius.circular(0),
@@ -177,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     break;
                   case 2:
                     setState(() {
-                      dynamicBorder = BorderRadius.only(
+                      dynamicBorder = const BorderRadius.only(
                         topLeft: Radius.circular(0),
                         bottomLeft: Radius.circular(0),
                         bottomRight: Radius.circular(20),
@@ -191,9 +200,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 20),
             CustomSlidingSegmentedControl<int>(
+              controller: controller,
               initialValue: 2,
               padding: 20,
-              children: {
+              children: const {
                 1: Text(
                   'News daily portal',
                   style: TextStyle(color: Colors.white),
@@ -215,7 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.blue,
                 borderRadius: BorderRadius.circular(6),
               ),
-              duration: Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 300),
               curve: Curves.easeInToLinear,
               onValueChanged: (v) {
                 print(v);
@@ -227,7 +237,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: CustomSlidingSegmentedControl<SegmentType>(
                 initialValue: SegmentType.map,
                 isStretch: true,
-                children: {
+                children: const {
                   SegmentType.news: Text(
                     'Flights',
                     textAlign: TextAlign.center,
@@ -237,7 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     textAlign: TextAlign.center,
                   ),
                 },
-                innerPadding: EdgeInsets.all(4),
+                innerPadding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(14),
@@ -253,7 +263,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 20),
             CustomSlidingSegmentedControl<SegmentType>(
-              children: {
+              children: const {
                 SegmentType.news: Text('News'),
                 SegmentType.map: Text('Map'),
                 SegmentType.paper: Text('Flights'),
@@ -264,12 +274,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment(0.7, 0.0),
                   colors: [
-                    const Color(0xffee0000),
-                    const Color(0xffeeee00),
+                    Color(0xffee0000),
+                    Color(0xffeeee00),
                   ],
                 ),
               ),
@@ -281,6 +291,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Directionality(
               textDirection: TextDirection.rtl,
               child: CustomSlidingSegmentedControl<int>(
+                controller: controller,
                 thumbDecoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
@@ -288,7 +299,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.black.withOpacity(.3),
                       blurRadius: 4.0,
                       spreadRadius: 1.0,
-                      offset: Offset(
+                      offset: const Offset(
                         0.0,
                         2.0,
                       ),
@@ -296,7 +307,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
                 fromMax: true,
-                children: {
+                children: const {
                   1: Text(
                     'Directionality',
                     textAlign: TextAlign.center,
@@ -313,8 +324,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 20),
             CustomSlidingSegmentedControl<int>(
+              controller: controller,
               fromMax: true,
-              children: {
+              children: const {
                 1: Text(
                   'Segmentation',
                   textAlign: TextAlign.center,
@@ -336,7 +348,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.black.withOpacity(.3),
                     blurRadius: 4.0,
                     spreadRadius: 1.0,
-                    offset: Offset(
+                    offset: const Offset(
                       0.0,
                       2.0,
                     ),
@@ -350,7 +362,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 20),
             CustomSlidingSegmentedControl<SegmentType>(
               initialValue: SegmentType.news,
-              children: {
+              children: const {
                 SegmentType.paper: Text(
                   'Paper',
                   textAlign: TextAlign.center,
@@ -374,12 +386,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.of(context).push<void>(
                   MaterialPageRoute(
                     builder: (context) {
-                      return SecondView();
+                      return const SecondView();
                     },
                   ),
                 );
               },
-              child: Text('Go to second screen'),
+              child: const Text('Go to second screen'),
             ),
             const SizedBox(height: 20),
           ],
@@ -396,7 +408,7 @@ class SecondView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Second View'),
+        title: const Text('Second View'),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -407,7 +419,7 @@ class SecondView extends StatelessWidget {
               CustomSlidingSegmentedControl<SegmentType>(
                 initialValue: SegmentType.paper,
                 isStretch: true,
-                children: {
+                children: const {
                   SegmentType.news: Text(
                     'Flights',
                     textAlign: TextAlign.center,
@@ -428,7 +440,7 @@ class SecondView extends StatelessWidget {
               const SizedBox(height: 20),
               CustomSlidingSegmentedControl<SegmentType>(
                 initialValue: SegmentType.map,
-                children: {
+                children: const {
                   SegmentType.news: Text(
                     'News daily portal',
                     style: TextStyle(color: Colors.white),
@@ -443,8 +455,8 @@ class SecondView extends StatelessWidget {
                   ),
                 },
                 innerPadding: EdgeInsets.zero,
-                thumbDecoration: BoxDecoration(color: Colors.blue),
-                duration: Duration(milliseconds: 300),
+                thumbDecoration: const BoxDecoration(color: Colors.blue),
+                duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInToLinear,
                 onValueChanged: (SegmentType v) {
                   print(v);
