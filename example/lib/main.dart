@@ -7,6 +7,7 @@ void main() {
 }
 
 enum SegmentType { news, map, paper }
+
 enum TestType { segmentation, max, news }
 
 class MyApp extends StatelessWidget {
@@ -32,12 +33,15 @@ class _MyHomePageState extends State<MyHomePage> {
   int initial = 1;
   bool isPayment = false;
   int initialValue = 0;
-  late final CustomSegmentedController<int> controller;
+  late final CustomSegmentedController<SegmentType> controller;
 
   @override
   void initState() {
     super.initState();
     controller = CustomSegmentedController();
+    controller.addListener(() {
+      print('listener ${controller.value}');
+    });
   }
 
   BorderRadius dynamicBorder = const BorderRadius.only(
@@ -78,9 +82,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    controller.value = SegmentType.news;
+                  },
+                  child: const Text('change from controller'),
+                ),
+              ],
+            ),
             const SizedBox(height: 20),
             CustomSlidingSegmentedControl<int>(
-              controller: controller,
               initialValue: initial,
               height: 24,
               children: {
@@ -111,7 +124,6 @@ class _MyHomePageState extends State<MyHomePage> {
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInToLinear,
               onValueChanged: (v) {
-                controller.value = v;
                 setState(() {
                   initial = v;
                 });
@@ -119,7 +131,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 20),
             CustomSlidingSegmentedControl<int>(
-              controller: controller,
               children: const {
                 1: Text(
                   'Segmentation',
@@ -136,7 +147,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 20),
             CustomSlidingSegmentedControl<int>(
-              controller: controller,
               fromMax: true,
               height: 30,
               innerPadding: EdgeInsets.zero,
@@ -200,7 +210,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 20),
             CustomSlidingSegmentedControl<int>(
-              controller: controller,
               initialValue: 2,
               padding: 20,
               children: const {
@@ -291,7 +300,6 @@ class _MyHomePageState extends State<MyHomePage> {
             Directionality(
               textDirection: TextDirection.rtl,
               child: CustomSlidingSegmentedControl<int>(
-                controller: controller,
                 thumbDecoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
@@ -324,7 +332,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 20),
             CustomSlidingSegmentedControl<int>(
-              controller: controller,
               fromMax: true,
               children: const {
                 1: Text(
@@ -361,7 +368,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 20),
             CustomSlidingSegmentedControl<SegmentType>(
-              initialValue: SegmentType.news,
+              controller: controller,
               children: const {
                 SegmentType.paper: Text(
                   'Paper',
@@ -376,9 +383,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   textAlign: TextAlign.center,
                 ),
               },
-              onValueChanged: (v) {
-                print(v);
-              },
+              onValueChanged: (v) {},
             ),
             const SizedBox(height: 20),
             ElevatedButton(

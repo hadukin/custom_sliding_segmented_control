@@ -1,3 +1,9 @@
+# 1.7.1
+
+## Feat
+
+- Add CustomSegmentedController
+
 # 1.7.0
 
 ## Update pubspec.yaml
