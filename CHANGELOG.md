@@ -1,3 +1,9 @@
+# 1.7.2
+
+## Fix
+
+- Change thumb size didn't update when device orientation was change
+
 # 1.7.1
 
 ## Feat

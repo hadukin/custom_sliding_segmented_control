@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:custom_sliding_segmented_control/src/animation_panel.dart';
 import 'package:custom_sliding_segmented_control/src/cache.dart';
@@ -94,12 +95,10 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final CustomSegmentedController<T>? controller;
 
   @override
-  _CustomSlidingSegmentedControlState<T> createState() =>
-      _CustomSlidingSegmentedControlState();
+  _CustomSlidingSegmentedControlState<T> createState() => _CustomSlidingSegmentedControlState();
 }
 
-class _CustomSlidingSegmentedControlState<T>
-    extends State<CustomSlidingSegmentedControl<T>> {
+class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmentedControl<T>> {
   T? current;
   double? height;
   double offset = 0.0;
@@ -127,8 +126,7 @@ class _CustomSlidingSegmentedControlState<T>
 
     final changeInitial = oldWidget.initialValue != widget.initialValue;
 
-    final changeChildrenLength =
-        oldWidget.children.length != widget.children.length;
+    final changeChildrenLength = oldWidget.children.length != widget.children.length;
 
     if (changeInitial || changeChildrenLength) {
       hasTouch = true;
@@ -170,17 +168,13 @@ class _CustomSlidingSegmentedControlState<T>
     height ??= size.height;
     final Map<T?, double> _temp = {};
     _temp.putIfAbsent(item.key, () => widget.fixedWidth ?? size.width);
-    if (widget.initialValue != null && widget.initialValue == item.key) {
-      final _offset = computeOffset<T>(
-        current: current,
-        items: widget.children.keys.toList(),
-        sizes: sizes.values.toList(),
-      );
-      setState(() {
-        offset = _offset;
-      });
-    }
+    final _offset = computeOffset<T>(
+      current: current,
+      items: widget.children.keys.toList(),
+      sizes: sizes.values.toList(),
+    );
     setState(() {
+      offset = _offset;
       if (isCacheEnabled) {
         cacheItems.add(Cache<T>(item: item, size: size));
       }
@@ -192,8 +186,7 @@ class _CustomSlidingSegmentedControlState<T>
   }
 
   void _controllerTap() {
-    if (widget.controller!.value == null ||
-        current == widget.controller!.value) {
+    if (widget.controller!.value == null || current == widget.controller!.value) {
       return;
     }
 
@@ -244,40 +237,42 @@ class _CustomSlidingSegmentedControlState<T>
   }
 
   Widget layout() {
-    return Container(
-      clipBehavior: widget.clipBehavior,
-      decoration: widget.decoration,
-      padding: widget.innerPadding,
-      child: Stack(
-        children: [
-          AnimationPanel<T>(
-            hasTouch: hasTouch,
-            offset: offset,
-            height: height,
-            width: sizes[current],
-            duration: widget.duration,
-            curve: widget.curve,
-            decoration: widget.thumbDecoration,
-          ),
-          Row(
+    return OrientationBuilder(
+      builder: (BuildContext context, Orientation orientation) {
+        return Container(
+          clipBehavior: widget.clipBehavior,
+          decoration: widget.decoration,
+          padding: widget.innerPadding,
+          child: Stack(
             children: [
-              for (final item in widget.children.entries)
-                MeasureSize(
-                  onChange: (value) {
-                    calculateSize(
-                      size: value,
-                      item: item,
-                      isCacheEnabled: true,
-                    );
-                  },
-                  child: widget.isStretch
-                      ? Expanded(child: _segmentItem(item))
-                      : _segmentItem(item),
-                ),
+              AnimationPanel<T>(
+                hasTouch: hasTouch,
+                offset: offset,
+                height: height,
+                width: sizes[current],
+                duration: widget.duration,
+                curve: widget.curve,
+                decoration: widget.thumbDecoration,
+              ),
+              Row(
+                children: [
+                  for (final item in widget.children.entries)
+                    MeasureSize(
+                      onChange: (value) {
+                        calculateSize(
+                          size: value,
+                          item: item,
+                          isCacheEnabled: true,
+                        );
+                      },
+                      child: widget.isStretch ? Expanded(child: _segmentItem(item)) : _segmentItem(item),
+                    ),
+                ],
+              ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

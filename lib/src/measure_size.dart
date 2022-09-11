@@ -37,6 +37,6 @@ class _MeasureSizeState extends State<MeasureSize> {
     if (oldSize == newSize) return;
 
     oldSize = newSize;
-    widget.onChange(newSize!);
+    widget.onChange(newSize ?? Size.zero);
   }
 }
