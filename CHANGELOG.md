@@ -1,3 +1,9 @@
+# 1.7.3
+
+## Fix
+
+- RangeError (end): Invalid value: Not in inclusive range 0..1: 2
+
 # 1.7.2
 
 ## Fix

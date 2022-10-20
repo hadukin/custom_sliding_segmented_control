@@ -168,13 +168,17 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
     height ??= size.height;
     final Map<T?, double> _temp = {};
     _temp.putIfAbsent(item.key, () => widget.fixedWidth ?? size.width);
-    final _offset = computeOffset<T>(
-      current: current,
-      items: widget.children.keys.toList(),
-      sizes: sizes.values.toList(),
-    );
+    if (widget.initialValue != null && widget.initialValue == item.key) {
+      final _offset = computeOffset<T>(
+        current: current,
+        items: widget.children.keys.toList(),
+        sizes: sizes.values.toList(),
+      );
+      setState(() {
+        offset = _offset;
+      });
+    }
     setState(() {
-      offset = _offset;
       if (isCacheEnabled) {
         cacheItems.add(Cache<T>(item: item, size: size));
       }
@@ -237,57 +241,57 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
   }
 
   Widget layout() {
-    return OrientationBuilder(
-      builder: (BuildContext context, Orientation orientation) {
-        return Container(
-          clipBehavior: widget.clipBehavior,
-          decoration: widget.decoration,
-          padding: widget.innerPadding,
-          child: Stack(
+    return Container(
+      clipBehavior: widget.clipBehavior,
+      decoration: widget.decoration,
+      padding: widget.innerPadding,
+      child: Stack(
+        children: [
+          AnimationPanel<T>(
+            hasTouch: hasTouch,
+            offset: offset,
+            height: height,
+            width: sizes[current],
+            duration: widget.duration,
+            curve: widget.curve,
+            decoration: widget.thumbDecoration,
+          ),
+          Row(
             children: [
-              AnimationPanel<T>(
-                hasTouch: hasTouch,
-                offset: offset,
-                height: height,
-                width: sizes[current],
-                duration: widget.duration,
-                curve: widget.curve,
-                decoration: widget.thumbDecoration,
-              ),
-              Row(
-                children: [
-                  for (final item in widget.children.entries)
-                    MeasureSize(
-                      onChange: (value) {
-                        calculateSize(
-                          size: value,
-                          item: item,
-                          isCacheEnabled: true,
-                        );
-                      },
-                      child: widget.isStretch ? Expanded(child: _segmentItem(item)) : _segmentItem(item),
-                    ),
-                ],
-              ),
+              for (final item in widget.children.entries)
+                MeasureSize(
+                  onChange: (value) {
+                    calculateSize(
+                      size: value,
+                      item: item,
+                      isCacheEnabled: true,
+                    );
+                  },
+                  child: widget.isStretch ? Expanded(child: _segmentItem(item)) : _segmentItem(item),
+                ),
             ],
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (widget.isStretch)
-          Expanded(
-            child: layout(),
-          )
-        else
-          layout()
-      ],
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (widget.isStretch)
+              Expanded(
+                child: layout(),
+              )
+            else
+              layout()
+          ],
+        );
+      },
     );
   }
 }
