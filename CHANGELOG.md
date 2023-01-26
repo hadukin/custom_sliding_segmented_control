@@ -1,3 +1,9 @@
+# 1.7.4
+
+## Feat
+
+- Add CustomSegmentSettings for more customization of segments
+
 # 1.7.3
 
 ## Fix

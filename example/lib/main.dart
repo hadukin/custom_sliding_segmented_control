@@ -1,5 +1,7 @@
+import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:example/example_1.dart';
 import 'package:example/example_10.dart';
+import 'package:example/example_11.dart';
 import 'package:example/example_2.dart';
 import 'package:example/example_3.dart';
 import 'package:example/example_4.dart';
@@ -66,7 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 16),
             const Example10(),
             const SizedBox(height: 16),
-            const SizedBox(height: 20),
+            const Example11(),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push<void>(

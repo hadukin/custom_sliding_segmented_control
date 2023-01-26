@@ -6,6 +6,7 @@ import 'package:custom_sliding_segmented_control/src/cache.dart';
 import 'package:custom_sliding_segmented_control/src/compute_offset.dart';
 import 'package:custom_sliding_segmented_control/src/custom_segmented_controller.dart';
 import 'package:custom_sliding_segmented_control/src/measure_size.dart';
+import 'package:custom_sliding_segmented_control/src/segment_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -68,16 +69,19 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.isStretch = false,
     this.fromMax = false,
     this.clipBehavior = Clip.none,
-    this.splashColor = Colors.transparent,
-    this.splashFactory = NoSplash.splashFactory,
-    this.highlightColor = Colors.transparent,
+    @Deprecated('use CustomSegmentSettings') this.splashColor = Colors.transparent,
+    @Deprecated('use CustomSegmentSettings') this.splashFactory = NoSplash.splashFactory,
+    @Deprecated('use CustomSegmentSettings') this.highlightColor = Colors.transparent,
     this.height = 40,
     this.controller,
+    this.customSegmentSettings,
+    this.onHoverSegment,
   })  : assert(children.length != 0),
         super(key: key);
   final BoxDecoration? decoration;
   final BoxDecoration? thumbDecoration;
   final ValueChanged<T> onValueChanged;
+  final void Function(T value, bool isHover)? onHoverSegment;
   final Duration? duration;
   final Curve curve;
   final EdgeInsets innerPadding;
@@ -88,11 +92,19 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final T? initialValue;
   final bool fromMax;
   final Clip clipBehavior;
+
+  @Deprecated('use CustomSegmentSettings')
   final Color? splashColor;
+
+  @Deprecated('use CustomSegmentSettings')
   final InteractiveInkFeatureFactory? splashFactory;
+
+  @Deprecated('use CustomSegmentSettings')
   final Color? highlightColor;
+
   final double? height;
   final CustomSegmentedController<T>? controller;
+  final CustomSegmentSettings? customSegmentSettings;
 
   @override
   _CustomSlidingSegmentedControlState<T> createState() => _CustomSlidingSegmentedControlState();
@@ -225,12 +237,16 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
 
   Widget _segmentItem(MapEntry<T, Widget> item) {
     return InkWell(
-      splashColor: widget.splashColor,
-      splashFactory: widget.splashFactory,
-      highlightColor: widget.highlightColor,
-      onTap: () {
-        onTapItem(item);
-      },
+      onHover: (isHover) => widget.onHoverSegment?.call(item.key, isHover),
+      onTap: () => onTapItem(item),
+      mouseCursor: widget.customSegmentSettings?.mouseCursor,
+      hoverColor: widget.customSegmentSettings?.hoverColor,
+      overlayColor: widget.customSegmentSettings?.overlayColor,
+      radius: widget.customSegmentSettings?.radius,
+      splashColor: widget.customSegmentSettings?.splashColor ?? widget.splashColor,
+      splashFactory: widget.customSegmentSettings?.splashFactory ?? widget.splashFactory,
+      highlightColor: widget.customSegmentSettings?.highlightColor ?? widget.highlightColor,
+      borderRadius: widget.customSegmentSettings?.borderRadius,
       child: Container(
         height: widget.height,
         width: maxSize ?? widget.fixedWidth,
