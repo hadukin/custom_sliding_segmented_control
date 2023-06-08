@@ -42,6 +42,7 @@ import 'package:flutter/material.dart';
 /// * `isStretch` - stretches CustomSlidingSegmentedControl to full width
 /// * `onValueChanged` - on change current segment
 /// * `children` - segment items map
+/// * `isDisabled` - whether the switch control is disabled, default to false
 /// * `initialValue` - initial segment
 /// * `duration` - speed animation panel
 /// * `curve` - curve for animated panel
@@ -57,6 +58,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   const CustomSlidingSegmentedControl({
     Key? key,
     required this.children,
+    this.isDisabled = false,
     required this.onValueChanged,
     this.initialValue,
     this.duration,
@@ -88,6 +90,9 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final double padding;
   final double? fixedWidth;
   final Map<T, Widget> children;
+  /// true if the switch control is disabled
+  /// defalut to false
+  final bool isDisabled;
   final bool isStretch;
   final T? initialValue;
   final bool fromMax;
@@ -219,6 +224,11 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
   }
 
   void onTapItem(MapEntry<T?, Widget> item) {
+    // when the switch control is disabled
+    // do nothing on tap item
+    if(widget.isDisabled){
+      return;
+    }
     if (!hasTouch) {
       setState(() => hasTouch = true);
     }
