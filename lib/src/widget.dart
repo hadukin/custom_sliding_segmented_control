@@ -54,6 +54,11 @@ import 'package:flutter/material.dart';
 /// * `decoration` - for decoration main panel
 /// * `thumbDecoration` - for decoraton animation panel
 /// * `height` - height panel
+/// * `showDivider` - whether or not to show a divider between segments
+/// * `dividerColor` - Color of the divider
+/// * `dividerThickness` - Thickness of the divider
+/// * `dividerIndent` - Indent of the divider
+/// * `dividerEndIndent` - End indent of the divider
 class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   const CustomSlidingSegmentedControl({
     Key? key,
@@ -71,13 +76,21 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.isStretch = false,
     this.fromMax = false,
     this.clipBehavior = Clip.none,
-    @Deprecated('use CustomSegmentSettings') this.splashColor = Colors.transparent,
-    @Deprecated('use CustomSegmentSettings') this.splashFactory = NoSplash.splashFactory,
-    @Deprecated('use CustomSegmentSettings') this.highlightColor = Colors.transparent,
+    @Deprecated('use CustomSegmentSettings')
+    this.splashColor = Colors.transparent,
+    @Deprecated('use CustomSegmentSettings')
+    this.splashFactory = NoSplash.splashFactory,
+    @Deprecated('use CustomSegmentSettings')
+    this.highlightColor = Colors.transparent,
     this.height = 40,
     this.controller,
     this.customSegmentSettings,
     this.onHoverSegment,
+    this.showDivider = false,
+    this.dividerColor = Colors.grey,
+    this.dividerThickness = 1.0,
+    this.dividerIndent = 4.0,
+    this.dividerEndIndent = 4.0,
   })  : assert(children.length != 0),
         super(key: key);
   final BoxDecoration? decoration;
@@ -90,6 +103,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final double padding;
   final double? fixedWidth;
   final Map<T, Widget> children;
+
   /// true if the switch control is disabled
   /// defalut to false
   final bool isDisabled;
@@ -111,11 +125,19 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final CustomSegmentedController<T>? controller;
   final CustomSegmentSettings? customSegmentSettings;
 
+  final bool showDivider;
+  final Color dividerColor;
+  final double dividerThickness;
+  final double dividerIndent;
+  final double dividerEndIndent;
+
   @override
-  _CustomSlidingSegmentedControlState<T> createState() => _CustomSlidingSegmentedControlState();
+  _CustomSlidingSegmentedControlState<T> createState() =>
+      _CustomSlidingSegmentedControlState();
 }
 
-class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmentedControl<T>> {
+class _CustomSlidingSegmentedControlState<T>
+    extends State<CustomSlidingSegmentedControl<T>> {
   T? current;
   double? height;
   double offset = 0.0;
@@ -143,7 +165,8 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
 
     final changeInitial = oldWidget.initialValue != widget.initialValue;
 
-    final changeChildrenLength = oldWidget.children.length != widget.children.length;
+    final changeChildrenLength =
+        oldWidget.children.length != widget.children.length;
 
     if (changeInitial || changeChildrenLength) {
       hasTouch = true;
@@ -207,7 +230,8 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
   }
 
   void _controllerTap() {
-    if (widget.controller!.value == null || current == widget.controller!.value) {
+    if (widget.controller!.value == null ||
+        current == widget.controller!.value) {
       return;
     }
 
@@ -226,7 +250,7 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
   void onTapItem(MapEntry<T?, Widget> item) {
     // when the switch control is disabled
     // do nothing on tap item
-    if(widget.isDisabled){
+    if (widget.isDisabled) {
       return;
     }
     if (!hasTouch) {
@@ -253,9 +277,12 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
       hoverColor: widget.customSegmentSettings?.hoverColor,
       overlayColor: widget.customSegmentSettings?.overlayColor,
       radius: widget.customSegmentSettings?.radius,
-      splashColor: widget.customSegmentSettings?.splashColor ?? widget.splashColor,
-      splashFactory: widget.customSegmentSettings?.splashFactory ?? widget.splashFactory,
-      highlightColor: widget.customSegmentSettings?.highlightColor ?? widget.highlightColor,
+      splashColor:
+          widget.customSegmentSettings?.splashColor ?? widget.splashColor,
+      splashFactory:
+          widget.customSegmentSettings?.splashFactory ?? widget.splashFactory,
+      highlightColor:
+          widget.customSegmentSettings?.highlightColor ?? widget.highlightColor,
       borderRadius: widget.customSegmentSettings?.borderRadius,
       child: Container(
         height: widget.height,
@@ -283,19 +310,42 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
             decoration: widget.thumbDecoration,
           ),
           Row(
-            children: [
-              for (final item in widget.children.entries)
-                MeasureSize(
-                  onChange: (value) {
-                    calculateSize(
-                      size: value,
-                      item: item,
-                      isCacheEnabled: true,
-                    );
-                  },
-                  child: widget.isStretch ? Expanded(child: _segmentItem(item)) : _segmentItem(item),
-                ),
-            ],
+            children: widget.children.entries.expand((item) {
+              // Get the index of the current item
+              final index = widget.children.keys.toList().indexOf(item.key);
+
+              // Create a list to hold the segments and dividers
+              final List<Widget> segmentsAndDividers = [];
+
+              // Append the segment
+              segmentsAndDividers.add(MeasureSize(
+                onChange: (value) {
+                  calculateSize(
+                    size: value,
+                    item: item,
+                    isCacheEnabled: true,
+                  );
+                },
+                child: widget.isStretch
+                    ? Expanded(child: _segmentItem(item))
+                    : _segmentItem(item),
+              ));
+
+              // If it's not the last item, append a divider
+              if (widget.showDivider && index < widget.children.length - 1) {
+                segmentsAndDividers.add(
+                  VerticalDivider(
+                    color: widget.dividerColor,
+                    thickness: widget.dividerThickness,
+                    indent: widget.dividerIndent,
+                    endIndent: widget.dividerEndIndent,
+                    width: 1,
+                  ),
+                );
+              }
+
+              return segmentsAndDividers;
+            }).toList(),
           ),
         ],
       ),
