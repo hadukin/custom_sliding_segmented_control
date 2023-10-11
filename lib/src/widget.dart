@@ -1,10 +1,9 @@
 import 'dart:math';
-import 'dart:ui';
-
 import 'package:custom_sliding_segmented_control/src/animation_panel.dart';
 import 'package:custom_sliding_segmented_control/src/cache.dart';
 import 'package:custom_sliding_segmented_control/src/compute_offset.dart';
 import 'package:custom_sliding_segmented_control/src/custom_segmented_controller.dart';
+import 'package:custom_sliding_segmented_control/src/divider_settings.dart';
 import 'package:custom_sliding_segmented_control/src/measure_size.dart';
 import 'package:custom_sliding_segmented_control/src/segment_settings.dart';
 import 'package:flutter/cupertino.dart';
@@ -56,7 +55,7 @@ import 'package:flutter/material.dart';
 /// * `height` - height panel
 class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   const CustomSlidingSegmentedControl({
-    Key? key,
+    super.key,
     required this.children,
     this.isDisabled = false,
     required this.onValueChanged,
@@ -70,6 +69,8 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.thumbDecoration = const BoxDecoration(color: Colors.white),
     this.isStretch = false,
     this.fromMax = false,
+    this.isShowDivider = false,
+    this.dividerSettings = const DividerSettings(),
     this.clipBehavior = Clip.none,
     @Deprecated('use CustomSegmentSettings') this.splashColor = Colors.transparent,
     @Deprecated('use CustomSegmentSettings') this.splashFactory = NoSplash.splashFactory,
@@ -78,8 +79,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.controller,
     this.customSegmentSettings,
     this.onHoverSegment,
-  })  : assert(children.length != 0),
-        super(key: key);
+  }) : assert(children.length != 0);
   final BoxDecoration? decoration;
   final BoxDecoration? thumbDecoration;
   final ValueChanged<T> onValueChanged;
@@ -90,6 +90,8 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final double padding;
   final double? fixedWidth;
   final Map<T, Widget> children;
+  final bool isShowDivider;
+  final DividerSettings dividerSettings;
 
   /// true if the switch control is disabled
   /// defalut to false
@@ -178,14 +180,11 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
     }
   }
 
-  void calculateSize({
-    required Size size,
-    required MapEntry<T?, Widget> item,
-    required bool isCacheEnabled,
-  }) {
+  void calculateSize({required Size size, required MapEntry<T?, Widget> item, required bool isCacheEnabled}) {
     height ??= size.height;
     final Map<T?, double> _temp = {};
     _temp.putIfAbsent(item.key, () => widget.fixedWidth ?? size.width);
+
     if (widget.initialValue != null && widget.initialValue == item.key) {
       final _offset = computeOffset<T>(
         current: current,
@@ -267,6 +266,32 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
     );
   }
 
+  Widget _dividerItem(MapEntry<T?, double> item) {
+    return IgnorePointer(
+      child: SizedBox(
+        height: widget.height,
+        width: item.value,
+        child: Stack(
+          children: [
+            if (item.key != widget.children.keys.last)
+              Positioned(
+                top: widget.dividerSettings.indent,
+                bottom: widget.dividerSettings.endIndent,
+                right: 0,
+                child: Transform.translate(
+                  offset: Offset(widget.dividerSettings.thickness / 2, 0),
+                  child: Container(
+                    width: widget.dividerSettings.thickness,
+                    decoration: widget.dividerSettings.decoration,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget layout() {
     return Container(
       clipBehavior: widget.clipBehavior,
@@ -274,6 +299,12 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
       padding: widget.innerPadding,
       child: Stack(
         children: [
+          if (widget.isShowDivider && widget.children.length > 1)
+            Row(
+              children: [
+                for (final item in sizes.entries) _dividerItem(item),
+              ],
+            ),
           AnimationPanel<T>(
             hasTouch: hasTouch,
             offset: offset,
@@ -285,7 +316,7 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
           ),
           Row(
             children: [
-              for (final item in widget.children.entries)
+              for (final item in widget.children.entries) ...[
                 MeasureSize(
                   onChange: (value) {
                     calculateSize(
@@ -296,6 +327,7 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
                   },
                   child: widget.isStretch ? Expanded(child: _segmentItem(item)) : _segmentItem(item),
                 ),
+              ],
             ],
           ),
         ],
@@ -315,7 +347,7 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
                 child: layout(),
               )
             else
-              layout()
+              layout(),
           ],
         );
       },

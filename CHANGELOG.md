@@ -1,3 +1,11 @@
+# 1.8.0
+
+## Feat
+
+- Add support divider
+- Add `DividerSettings` to customize display for divider
+- Add `isShowDivider` for show or not divider
+
 # 1.7.5
 
 ## Feat

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AnimationPanel<T> extends StatelessWidget {
   const AnimationPanel({
-    Key? key,
+    super.key,
     required this.offset,
     required this.width,
     required this.height,
@@ -10,7 +10,7 @@ class AnimationPanel<T> extends StatelessWidget {
     this.duration,
     this.curve,
     this.decoration,
-  }) : super(key: key);
+  });
 
   final double offset;
   final double? width;
@@ -27,9 +27,7 @@ class AnimationPanel<T> extends StatelessWidget {
 
     return AnimatedContainer(
       transform: Matrix4.translationValues(_offset, 0, 0),
-      duration: hasTouch == false
-          ? Duration.zero
-          : duration ?? const Duration(milliseconds: 200),
+      duration: hasTouch == false ? Duration.zero : duration ?? const Duration(milliseconds: 200),
       curve: curve!,
       width: width,
       decoration: decoration,
