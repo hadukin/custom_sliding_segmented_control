@@ -1,11 +1,11 @@
 name: custom_sliding_segmented_control
 description: Allows you to flexibly configure the widget for displaying controls. You can add color, speed, size, initial value, animation and more.
-version: 1.7.4
+version: 1.7.5
 homepage: https://github.com/hadukin/custom_sliding_segmented_control
 repository: https://github.com/hadukin/custom_sliding_segmented_control
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=2.17.0 <4.0.0"
   flutter: ">=3.0.0"
 
 dependencies:

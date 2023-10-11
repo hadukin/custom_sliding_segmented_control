@@ -90,6 +90,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final double padding;
   final double? fixedWidth;
   final Map<T, Widget> children;
+
   /// true if the switch control is disabled
   /// defalut to false
   final bool isDisabled;
@@ -226,7 +227,7 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
   void onTapItem(MapEntry<T?, Widget> item) {
     // when the switch control is disabled
     // do nothing on tap item
-    if(widget.isDisabled){
+    if (widget.isDisabled) {
       return;
     }
     if (!hasTouch) {

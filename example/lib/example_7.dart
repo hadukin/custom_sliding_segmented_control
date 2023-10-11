@@ -27,6 +27,10 @@ class _Example7State extends State<Example7> {
             'Map',
             textAlign: TextAlign.center,
           ),
+          SegmentType.paper: Text(
+            'Payment',
+            textAlign: TextAlign.center,
+          ),
         },
         innerPadding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
