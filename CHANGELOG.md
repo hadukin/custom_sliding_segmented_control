@@ -4,6 +4,7 @@
 
 - Add support divider
 - Add `DividerSettings` to customize display for divider
+- Add `isShowDivider` for show or not divider
 
 # 1.7.5
 
