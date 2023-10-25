@@ -1,3 +1,11 @@
+# 1.8.1
+
+## Feat
+
+- Add default divider color
+- Update divider settings
+- Remove deprecated settings
+
 # 1.8.0
 
 ## Feat
