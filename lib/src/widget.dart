@@ -60,7 +60,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.isDisabled = false,
     required this.onValueChanged,
     this.initialValue,
-    this.duration,
+    this.duration = const Duration(milliseconds: 200),
     this.curve = Curves.easeInOut,
     this.innerPadding = const EdgeInsets.all(2.0),
     this.padding = 12,
@@ -72,9 +72,9 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.isShowDivider = false,
     this.dividerSettings = const DividerSettings(),
     this.clipBehavior = Clip.none,
-    @Deprecated('use CustomSegmentSettings') this.splashColor = Colors.transparent,
-    @Deprecated('use CustomSegmentSettings') this.splashFactory = NoSplash.splashFactory,
-    @Deprecated('use CustomSegmentSettings') this.highlightColor = Colors.transparent,
+    // @Deprecated('use CustomSegmentSettings') this.splashColor = Colors.transparent,
+    // @Deprecated('use CustomSegmentSettings') this.splashFactory = NoSplash.splashFactory,
+    // @Deprecated('use CustomSegmentSettings') this.highlightColor = Colors.transparent,
     this.height = 40,
     this.controller,
     this.customSegmentSettings,
@@ -84,7 +84,7 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final BoxDecoration? thumbDecoration;
   final ValueChanged<T> onValueChanged;
   final void Function(T value, bool isHover)? onHoverSegment;
-  final Duration? duration;
+  final Duration duration;
   final Curve curve;
   final EdgeInsets innerPadding;
   final double padding;
@@ -101,14 +101,14 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final bool fromMax;
   final Clip clipBehavior;
 
-  @Deprecated('use CustomSegmentSettings')
-  final Color? splashColor;
+  // @Deprecated('use CustomSegmentSettings')
+  // final Color? splashColor;
 
-  @Deprecated('use CustomSegmentSettings')
-  final InteractiveInkFeatureFactory? splashFactory;
+  // @Deprecated('use CustomSegmentSettings')
+  // final InteractiveInkFeatureFactory? splashFactory;
 
-  @Deprecated('use CustomSegmentSettings')
-  final Color? highlightColor;
+  // @Deprecated('use CustomSegmentSettings')
+  // final Color? highlightColor;
 
   final double? height;
   final CustomSegmentedController<T>? controller;
@@ -253,9 +253,9 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
       hoverColor: widget.customSegmentSettings?.hoverColor,
       overlayColor: widget.customSegmentSettings?.overlayColor,
       radius: widget.customSegmentSettings?.radius,
-      splashColor: widget.customSegmentSettings?.splashColor ?? widget.splashColor,
-      splashFactory: widget.customSegmentSettings?.splashFactory ?? widget.splashFactory,
-      highlightColor: widget.customSegmentSettings?.highlightColor ?? widget.highlightColor,
+      splashColor: widget.customSegmentSettings?.splashColor,
+      splashFactory: widget.customSegmentSettings?.splashFactory,
+      highlightColor: widget.customSegmentSettings?.highlightColor,
       borderRadius: widget.customSegmentSettings?.borderRadius,
       child: Container(
         height: widget.height,
@@ -266,7 +266,15 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
     );
   }
 
-  Widget _dividerItem(MapEntry<T?, double> item) {
+  Widget _dividerItem(int index, MapEntry<T?, double> item) {
+    final currentIndex = widget.children.keys.toList().indexOf(current!);
+    int? prevIndex;
+    if (currentIndex > 0) {
+      prevIndex = currentIndex - 1;
+    }
+
+    final isHideDivider = (index == prevIndex || index == currentIndex) && widget.dividerSettings.isHideAutomatically;
+
     return IgnorePointer(
       child: SizedBox(
         height: widget.height,
@@ -275,20 +283,18 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
           children: [
             if (item.key != widget.children.keys.last)
               Positioned(
-                // top: widget.dividerSettings.indent,
-                // bottom: widget.dividerSettings.endIndent,
-                top: 0,
-                // left: 0,
-                bottom: 0,
+                top: widget.dividerSettings.indent,
+                bottom: widget.dividerSettings.endIndent,
                 right: 0,
                 child: Transform.translate(
                   offset: Offset(widget.dividerSettings.thickness / 2, 0),
                   child: AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    width: widget.dividerSettings.thickness,
+                    padding: EdgeInsets.zero,
+                    margin: EdgeInsets.zero,
+                    curve: widget.dividerSettings.curve ?? widget.curve,
+                    duration: widget.dividerSettings.duration ?? widget.duration * 2,
+                    width: isHideDivider ? 0 : widget.dividerSettings.thickness,
                     decoration: widget.dividerSettings.decoration,
-                    // height: 20,
-                    margin: const EdgeInsets.symmetric(vertical: 12),
                   ),
                 ),
               ),
@@ -332,44 +338,8 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
           ),
           if (widget.isShowDivider && widget.children.length > 1)
             Row(
-              children: [
-                ...sizes.entries.toList().asMap().entries.map((item) {
-                  final currentIndex = widget.children.keys.toList().indexOf(current!);
-                  int? prevIndex;
-                  if (currentIndex > 0) {
-                    prevIndex = currentIndex - 1;
-                  }
-
-                  if (prevIndex == item.key) {
-                    return IgnorePointer(
-                      child: SizedBox(
-                        height: widget.height,
-                        width: item.value.value,
-                      ),
-                    );
-                  }
-
-                  if (currentIndex == 0 && item.key == 0) {
-                    return IgnorePointer(
-                      child: SizedBox(
-                        height: widget.height,
-                        width: item.value.value,
-                      ),
-                    );
-                  }
-
-                  if (currentIndex != 0 && item.key == currentIndex) {
-                    return IgnorePointer(
-                      child: SizedBox(
-                        height: widget.height,
-                        width: item.value.value,
-                      ),
-                    );
-                  }
-
-                  return _dividerItem(item.value);
-                }).toList(),
-              ],
+              children:
+                  sizes.entries.toList().asMap().entries.map((item) => _dividerItem(item.key, item.value)).toList(),
             ),
         ],
       ),

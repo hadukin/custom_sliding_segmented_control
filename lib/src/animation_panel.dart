@@ -7,7 +7,7 @@ class AnimationPanel<T> extends StatelessWidget {
     required this.width,
     required this.height,
     required this.hasTouch,
-    this.duration,
+    required this.duration,
     this.curve,
     this.decoration,
   });
@@ -15,7 +15,7 @@ class AnimationPanel<T> extends StatelessWidget {
   final double offset;
   final double? width;
   final double? height;
-  final Duration? duration;
+  final Duration duration;
   final Curve? curve;
   final bool hasTouch;
   final BoxDecoration? decoration;
@@ -27,7 +27,7 @@ class AnimationPanel<T> extends StatelessWidget {
 
     return AnimatedContainer(
       transform: Matrix4.translationValues(_offset, 0, 0),
-      duration: hasTouch == false ? Duration.zero : duration ?? const Duration(milliseconds: 200),
+      duration: hasTouch == false ? Duration.zero : duration,
       curve: curve!,
       width: width,
       decoration: decoration,

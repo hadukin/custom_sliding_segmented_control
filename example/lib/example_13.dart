@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-enum Pet { none, cat, dog, bird, snake }
+enum Pet { cat, dog, bird, snake, none }
 
 class Example13 extends StatefulWidget {
   const Example13({super.key});
@@ -19,11 +19,9 @@ class _Example13State extends State<Example13> {
       height: 48,
       isStretch: true,
       isShowDivider: true,
-      dividerSettings: const DividerSettings(
-        decoration: BoxDecoration(
-          color: Colors.red,
-        ),
-      ),
+      // dividerSettings: const DividerSettings(
+      //   decoration: BoxDecoration(color: Colors.grey),
+      // ),
       innerPadding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: const Color(0xFFD1D1D6),
@@ -33,6 +31,7 @@ class _Example13State extends State<Example13> {
         color: CupertinoColors.white,
         borderRadius: BorderRadius.circular(100),
       ),
+      curve: Curves.easeOutCubic,
       initialValue: Pet.none,
       children: Map<Pet, Widget>.fromIterable(
         Pet.values,
