@@ -29,10 +29,10 @@ class _Example12State extends State<Example12> {
       },
       dividerSettings: DividerSettings(
         thickness: 2,
-        // endIndent: 8,
-        // indent: 8,
+        endIndent: 8,
+        indent: 8,
         decoration: BoxDecoration(
-          color: Colors.red,
+          color: Colors.grey,
           borderRadius: BorderRadius.circular(20),
         ),
       ),

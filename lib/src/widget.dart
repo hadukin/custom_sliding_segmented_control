@@ -72,9 +72,6 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.isShowDivider = false,
     this.dividerSettings = const DividerSettings(),
     this.clipBehavior = Clip.none,
-    // @Deprecated('use CustomSegmentSettings') this.splashColor = Colors.transparent,
-    // @Deprecated('use CustomSegmentSettings') this.splashFactory = NoSplash.splashFactory,
-    // @Deprecated('use CustomSegmentSettings') this.highlightColor = Colors.transparent,
     this.height = 40,
     this.controller,
     this.customSegmentSettings,
@@ -100,15 +97,6 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final T? initialValue;
   final bool fromMax;
   final Clip clipBehavior;
-
-  // @Deprecated('use CustomSegmentSettings')
-  // final Color? splashColor;
-
-  // @Deprecated('use CustomSegmentSettings')
-  // final InteractiveInkFeatureFactory? splashFactory;
-
-  // @Deprecated('use CustomSegmentSettings')
-  // final Color? highlightColor;
 
   final double? height;
   final CustomSegmentedController<T>? controller;
@@ -292,9 +280,12 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
                     padding: EdgeInsets.zero,
                     margin: EdgeInsets.zero,
                     curve: widget.dividerSettings.curve ?? widget.curve,
-                    duration: widget.dividerSettings.duration ?? widget.duration * 2,
+                    duration: widget.dividerSettings.duration ?? widget.duration,
                     width: isHideDivider ? 0 : widget.dividerSettings.thickness,
-                    decoration: widget.dividerSettings.decoration,
+                    decoration: widget.dividerSettings.decoration ??
+                        BoxDecoration(
+                          color: Theme.of(context).dividerColor,
+                        ),
                   ),
                 ),
               ),
@@ -311,6 +302,11 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
       padding: widget.innerPadding,
       child: Stack(
         children: [
+          if (widget.isShowDivider && widget.children.length > 1)
+            Row(
+              children:
+                  sizes.entries.toList().asMap().entries.map((item) => _dividerItem(item.key, item.value)).toList(),
+            ),
           AnimationPanel<T>(
             hasTouch: hasTouch,
             offset: offset,
@@ -336,11 +332,6 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
               ],
             ],
           ),
-          if (widget.isShowDivider && widget.children.length > 1)
-            Row(
-              children:
-                  sizes.entries.toList().asMap().entries.map((item) => _dividerItem(item.key, item.value)).toList(),
-            ),
         ],
       ),
     );

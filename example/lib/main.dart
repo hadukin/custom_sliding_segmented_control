@@ -49,43 +49,44 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Example13(),
-            // const Example12(),
-            // const SizedBox(height: 16),
-            // const Example3(),
-            // const SizedBox(height: 16),
-            // const Example1(),
-            // const SizedBox(height: 16),
-            // const Example2(),
-            // const SizedBox(height: 16),
-            // const Example4(),
-            // const SizedBox(height: 16),
-            // const Example5(),
-            // const SizedBox(height: 16),
-            // const Example6(),
-            // const SizedBox(height: 16),
-            // const Example7(),
-            // const SizedBox(height: 16),
-            // const Example8(),
-            // const SizedBox(height: 16),
-            // const Example9(),
-            // const SizedBox(height: 16),
-            // const Example10(),
-            // const SizedBox(height: 16),
-            // const Example11(),
-            // const SizedBox(height: 16),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     Navigator.of(context).push<void>(
-            //       MaterialPageRoute(
-            //         builder: (context) {
-            //           return const SecondView();
-            //         },
-            //       ),
-            //     );
-            //   },
-            //   child: const Text('Go to second screen'),
-            // ),
+            const Example13(),
+            const SizedBox(height: 16),
+            const Example12(),
+            const SizedBox(height: 16),
+            const Example3(),
+            const SizedBox(height: 16),
+            const Example1(),
+            const SizedBox(height: 16),
+            const Example2(),
+            const SizedBox(height: 16),
+            const Example4(),
+            const SizedBox(height: 16),
+            const Example5(),
+            const SizedBox(height: 16),
+            const Example6(),
+            const SizedBox(height: 16),
+            const Example7(),
+            const SizedBox(height: 16),
+            const Example8(),
+            const SizedBox(height: 16),
+            const Example9(),
+            const SizedBox(height: 16),
+            const Example10(),
+            const SizedBox(height: 16),
+            const Example11(),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push<void>(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const SecondView();
+                    },
+                  ),
+                );
+              },
+              child: const Text('Go to second screen'),
+            ),
           ],
         ),
       ),

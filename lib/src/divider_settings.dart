@@ -10,8 +10,8 @@ class DividerSettings {
   final bool isHideAutomatically;
 
   const DividerSettings({
-    this.indent = 12,
-    this.endIndent = 12,
+    this.indent = 0,
+    this.endIndent = 0,
     this.thickness = 1,
     this.decoration,
     this.duration,

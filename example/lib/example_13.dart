@@ -1,9 +1,7 @@
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-enum Pet { cat, dog, bird, snake, none }
+enum Pet { none, cat, dog, bird, snake }
 
 class Example13 extends StatefulWidget {
   const Example13({super.key});
@@ -19,9 +17,7 @@ class _Example13State extends State<Example13> {
       height: 48,
       isStretch: true,
       isShowDivider: true,
-      // dividerSettings: const DividerSettings(
-      //   decoration: BoxDecoration(color: Colors.grey),
-      // ),
+      dividerSettings: DividerSettings(indent: 12, endIndent: 12),
       innerPadding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: const Color(0xFFD1D1D6),
@@ -42,10 +38,8 @@ class _Example13State extends State<Example13> {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // SvgPicture.asset(pet.iconPath()),
               Text(
                 pet.name,
-                // style: context.textStyles.bodySmallMedium,
               ),
             ],
           );
