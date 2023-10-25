@@ -65,6 +65,7 @@ class _Example3State extends State<Example3> {
         ),
         CustomSlidingSegmentedControl<int>(
           initialValue: initial,
+          isShowDivider: true,
           height: 24,
           controller: controller,
           children: {

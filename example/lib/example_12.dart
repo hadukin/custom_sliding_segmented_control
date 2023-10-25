@@ -28,7 +28,7 @@ class _Example12State extends State<Example12> {
         ),
       },
       dividerSettings: DividerSettings(
-        thickness: 1,
+        thickness: 2,
         endIndent: 8,
         indent: 8,
         decoration: BoxDecoration(
