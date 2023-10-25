@@ -275,14 +275,20 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
           children: [
             if (item.key != widget.children.keys.last)
               Positioned(
-                top: widget.dividerSettings.indent,
-                bottom: widget.dividerSettings.endIndent,
+                // top: widget.dividerSettings.indent,
+                // bottom: widget.dividerSettings.endIndent,
+                top: 0,
+                // left: 0,
+                bottom: 0,
                 right: 0,
                 child: Transform.translate(
                   offset: Offset(widget.dividerSettings.thickness / 2, 0),
-                  child: Container(
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 500),
                     width: widget.dividerSettings.thickness,
                     decoration: widget.dividerSettings.decoration,
+                    // height: 20,
+                    margin: const EdgeInsets.symmetric(vertical: 12),
                   ),
                 ),
               ),
@@ -299,12 +305,6 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
       padding: widget.innerPadding,
       child: Stack(
         children: [
-          if (widget.isShowDivider && widget.children.length > 1)
-            Row(
-              children: [
-                for (final item in sizes.entries) _dividerItem(item),
-              ],
-            ),
           AnimationPanel<T>(
             hasTouch: hasTouch,
             offset: offset,
@@ -330,6 +330,47 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
               ],
             ],
           ),
+          if (widget.isShowDivider && widget.children.length > 1)
+            Row(
+              children: [
+                ...sizes.entries.toList().asMap().entries.map((item) {
+                  final currentIndex = widget.children.keys.toList().indexOf(current!);
+                  int? prevIndex;
+                  if (currentIndex > 0) {
+                    prevIndex = currentIndex - 1;
+                  }
+
+                  if (prevIndex == item.key) {
+                    return IgnorePointer(
+                      child: SizedBox(
+                        height: widget.height,
+                        width: item.value.value,
+                      ),
+                    );
+                  }
+
+                  if (currentIndex == 0 && item.key == 0) {
+                    return IgnorePointer(
+                      child: SizedBox(
+                        height: widget.height,
+                        width: item.value.value,
+                      ),
+                    );
+                  }
+
+                  if (currentIndex != 0 && item.key == currentIndex) {
+                    return IgnorePointer(
+                      child: SizedBox(
+                        height: widget.height,
+                        width: item.value.value,
+                      ),
+                    );
+                  }
+
+                  return _dividerItem(item.value);
+                }).toList(),
+              ],
+            ),
         ],
       ),
     );
