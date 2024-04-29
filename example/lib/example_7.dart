@@ -1,6 +1,5 @@
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:example/enums.dart';
-import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 
 class Example7 extends StatefulWidget {

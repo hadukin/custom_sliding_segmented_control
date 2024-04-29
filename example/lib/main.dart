@@ -3,6 +3,8 @@ import 'package:example/example_10.dart';
 import 'package:example/example_11.dart';
 import 'package:example/example_12.dart';
 import 'package:example/example_13.dart';
+import 'package:example/example_14.dart';
+import 'package:example/example_15.dart';
 import 'package:example/example_2.dart';
 import 'package:example/example_3.dart';
 import 'package:example/example_4.dart';
@@ -49,7 +51,10 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Example13(),
+            const Example15(),
+            const SizedBox(height: 16),
+            const Example14(),
+            const SizedBox(height: 16),
             const SizedBox(height: 16),
             const Example12(),
             const SizedBox(height: 16),
@@ -75,6 +80,12 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 16),
             const Example11(),
             const SizedBox(height: 16),
+            const Directionality(
+              textDirection: TextDirection.rtl,
+              child: Example13(),
+            ),
+            const SizedBox(height: 16),
+            const Example13(),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push<void>(

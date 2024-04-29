@@ -37,28 +37,12 @@ import 'package:flutter/material.dart';
 ///   },
 /// ),
 /// ```
-///
-/// * `isStretch` - stretches CustomSlidingSegmentedControl to full width
-/// * `onValueChanged` - on change current segment
-/// * `children` - segment items map
-/// * `isDisabled` - whether the switch control is disabled, default to false
-/// * `initialValue` - initial segment
-/// * `duration` - speed animation panel
-/// * `curve` - curve for animated panel
-/// * `innerPadding` - inner padding
-/// * `fromMax` - gets the largest element, while the rest of the elements get its size
-/// * `fixedWidth` - fixed width items
-/// * `padding` - item padding
-/// * `clipBehavior` - for container
-/// * `decoration` - for decoration main panel
-/// * `thumbDecoration` - for decoraton animation panel
-/// * `height` - height panel
 class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   const CustomSlidingSegmentedControl({
     super.key,
     required this.children,
-    this.isDisabled = false,
     required this.onValueChanged,
+    this.isDisabled = false,
     this.initialValue,
     this.duration = const Duration(milliseconds: 200),
     this.curve = Curves.easeInOut,
@@ -76,30 +60,66 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
     this.controller,
     this.customSegmentSettings,
     this.onHoverSegment,
+    this.onTapSegment,
   }) : assert(children.length != 0);
+
+  /// Decoration main panel
   final BoxDecoration? decoration;
+
+  /// Decoraton animation panel
   final BoxDecoration? thumbDecoration;
-  final ValueChanged<T> onValueChanged;
-  final void Function(T value, bool isHover)? onHoverSegment;
-  final Duration duration;
-  final Curve curve;
-  final EdgeInsets innerPadding;
-  final double padding;
-  final double? fixedWidth;
+
+  // Segment items map
   final Map<T, Widget> children;
+
+  /// On change current segment
+  final ValueChanged<T> onValueChanged;
+
+  final void Function(T value, bool isHover)? onHoverSegment;
+
+  /// Speed animation panel
+  final Duration duration;
+
+  /// Curve for animated panel
+  final Curve curve;
+
+  final EdgeInsets innerPadding;
+
+  /// Item padding
+  final double padding;
+
+  /// fixed width items
+  final double? fixedWidth;
+
   final bool isShowDivider;
+
   final DividerSettings dividerSettings;
 
-  /// true if the switch control is disabled
-  /// defalut to false
+  /// `true` if the switch control is disabled, default to `false`
   final bool isDisabled;
+
+  /// Stretches CustomSlidingSegmentedControl to full width
   final bool isStretch;
+
+  /// Initial segment
   final T? initialValue;
+
+  /// Get the largest element, while the rest of the elements get its size
   final bool fromMax;
+
+  /// for container
   final Clip clipBehavior;
 
+  /// if the function returns `false`, there will be no transition to the segment
+  ///
+  /// in this function, you can add a check by clicking on a segment
+  final bool Function(T? segment)? onTapSegment;
+
+  /// height panel
   final double? height;
+
   final CustomSegmentedController<T>? controller;
+
   final CustomSegmentSettings? customSegmentSettings;
 
   @override
@@ -214,6 +234,10 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
   void onTapItem(MapEntry<T?, Widget> item) {
     // when the switch control is disabled
     // do nothing on tap item
+
+    if (widget.onTapSegment?.call(item.key) == false) {
+      return;
+    }
     if (widget.isDisabled) {
       return;
     }
@@ -255,13 +279,17 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
   }
 
   Widget _dividerItem(int index, MapEntry<T?, double> item) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     final currentIndex = widget.children.keys.toList().indexOf(current!);
+
     int? prevIndex;
     if (currentIndex > 0) {
-      prevIndex = currentIndex - 1;
+      prevIndex = isRtl ? currentIndex + 1 : currentIndex - 1;
     }
 
-    final isHideDivider = (index == prevIndex || index == currentIndex) && widget.dividerSettings.isHideAutomatically;
+    final isHideDivider = (index == prevIndex || index == currentIndex || (isRtl && index == currentIndex + 1)) &&
+        widget.dividerSettings.isHideAutomatically;
+    final isVisible = isRtl ? item.key != widget.children.keys.first : item.key != widget.children.keys.last;
 
     return IgnorePointer(
       child: SizedBox(
@@ -269,7 +297,7 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
         width: item.value,
         child: Stack(
           children: [
-            if (item.key != widget.children.keys.last)
+            if (isVisible)
               Positioned(
                 top: widget.dividerSettings.indent,
                 bottom: widget.dividerSettings.endIndent,

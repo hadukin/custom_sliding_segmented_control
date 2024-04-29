@@ -32,5 +32,13 @@ class DividerSettings {
   }
 
   @override
-  int get hashCode => Object.hashAll([indent, endIndent, thickness, decoration]);
+  int get hashCode => Object.hashAll([
+        indent,
+        endIndent,
+        thickness,
+        decoration,
+        duration,
+        curve,
+        isHideAutomatically,
+      ]);
 }
