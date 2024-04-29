@@ -1,3 +1,11 @@
+# 1.8.2
+
+## Fix
+
+- Weird separator behavior in RTL mode
+- Add manage disabled state for each segment
+- Add onTapSegment
+
 # 1.8.1
 
 ## Feat
