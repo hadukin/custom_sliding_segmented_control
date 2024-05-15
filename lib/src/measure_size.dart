@@ -1,42 +1,40 @@
-// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter/rendering.dart';
 
-class MeasureSize extends StatefulWidget {
-  final Widget child;
+class MeasureSize extends SingleChildRenderObjectWidget {
   final Function(Size size) onChange;
 
   const MeasureSize({
     Key? key,
+    required Widget child,
     required this.onChange,
-    required this.child,
-  }) : super(key: key);
+  }) : super(key: key, child: child);
 
   @override
-  _MeasureSizeState createState() => _MeasureSizeState();
-}
-
-class _MeasureSizeState extends State<MeasureSize> {
-  @override
-  Widget build(BuildContext context) {
-    SchedulerBinding.instance.addPostFrameCallback(postFrameCallback);
-    return Container(
-      key: widgetKey,
-      child: widget.child,
-    );
+  RenderObject createRenderObject(BuildContext context) {
+    return _SizeRenderObject(onChange);
   }
 
-  GlobalKey<State<StatefulWidget>> widgetKey = GlobalKey();
-  Size? oldSize;
+  @override
+  void updateRenderObject(BuildContext context, covariant _SizeRenderObject renderObject) {
+    renderObject.onChange = onChange;
+  }
+}
 
-  void postFrameCallback(Duration d) {
-    final context = widgetKey.currentContext;
-    if (context == null) return;
+class _SizeRenderObject extends RenderProxyBox {
+  Function(Size size) onChange;
+  Size? _oldSize;
 
-    final Size? newSize = context.size;
-    if (oldSize == newSize) return;
+  _SizeRenderObject(this.onChange);
 
-    oldSize = newSize;
-    widget.onChange(newSize ?? Size.zero);
+  @override
+  void performLayout() {
+    super.performLayout();
+    final Size newSize = child?.size ?? Size.zero;
+    if (_oldSize == newSize) return;
+    _oldSize = newSize;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      onChange(newSize);
+    });
   }
 }
