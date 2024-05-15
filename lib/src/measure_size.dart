@@ -30,6 +30,7 @@ class _SizeRenderObject extends RenderProxyBox {
   @override
   void performLayout() {
     super.performLayout();
+    if (child == null) return;
     final Size newSize = child?.size ?? Size.zero;
     if (_oldSize == newSize) return;
     _oldSize = newSize;

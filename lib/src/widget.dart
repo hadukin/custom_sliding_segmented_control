@@ -188,7 +188,11 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
     }
   }
 
-  void calculateSize({required Size size, required MapEntry<T?, Widget> item, required bool isCacheEnabled}) {
+  void calculateSize({
+    required Size size,
+    required MapEntry<T?, Widget> item,
+    required bool isCacheEnabled,
+  }) {
     height ??= size.height;
     final Map<T?, double> _temp = {};
     _temp.putIfAbsent(item.key, () => widget.fixedWidth ?? size.width);
@@ -345,20 +349,24 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
             decoration: widget.thumbDecoration,
           ),
           Row(
-            children: [
-              for (final item in widget.children.entries) ...[
-                MeasureSize(
-                  onChange: (value) {
-                    calculateSize(
-                      size: value,
-                      item: item,
-                      isCacheEnabled: true,
-                    );
-                  },
-                  child: widget.isStretch ? Expanded(child: _segmentItem(item)) : _segmentItem(item),
-                ),
-              ],
-            ],
+            children: widget.children.entries.map((item) {
+              final measureSize = MeasureSize(
+                onChange: (value) {
+                  calculateSize(
+                    size: value,
+                    item: item,
+                    isCacheEnabled: true,
+                  );
+                },
+                child: _segmentItem(item),
+              );
+
+              if (widget.isStretch) {
+                return Expanded(child: measureSize);
+              }
+
+              return measureSize;
+            }).toList(growable: false),
           ),
         ],
       ),
