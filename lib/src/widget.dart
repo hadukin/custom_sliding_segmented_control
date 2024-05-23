@@ -253,8 +253,8 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
     );
     setState(() => offset = _offset);
     final _value = _keys[_keys.indexOf(current)]!;
-    widget.onValueChanged(_value);
-    widget.controller?.value = current;
+    // widget.onValueChanged(_value);
+    // widget.controller?.value = current;
   }
 
   Widget _segmentItem(MapEntry<T, Widget> item) {

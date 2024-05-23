@@ -25,10 +25,6 @@ class _Example15State extends State<Example15> {
     return Column(
       children: [
         CustomSlidingSegmentedControl<Pet>(
-          onTapSegment: (value) {
-            if (value == Pet.snake) return false;
-            return true;
-          },
           controller: _controller,
           height: 48,
           isStretch: true,
@@ -62,8 +58,12 @@ class _Example15State extends State<Example15> {
               );
             },
           ),
+          onTapSegment: (value) {
+            if (value == Pet.snake) return false;
+            return true;
+          },
           onValueChanged: (pet) {
-            print(pet);
+            _controller.value = pet;
           },
         ),
       ],
