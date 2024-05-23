@@ -193,16 +193,6 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
     final Map<T?, double> _temp = {};
     _temp.putIfAbsent(item.key, () => widget.fixedWidth ?? size.width);
 
-    if (widget.initialValue != null && widget.initialValue == item.key) {
-      final _offset = computeOffset<T>(
-        current: current,
-        items: widget.children.keys.toList(),
-        sizes: sizes.values.toList(),
-      );
-      setState(() {
-        offset = _offset;
-      });
-    }
     setState(() {
       if (isCacheEnabled) {
         cacheItems.add(Cache<T>(item: item, size: size));
@@ -211,6 +201,12 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
       if (widget.fromMax) {
         maxSize = sizes.values.toList().reduce(max);
       }
+      final _offset = computeOffset<T>(
+        current: current,
+        items: widget.children.keys.toList(),
+        sizes: sizes.values.toList(),
+      );
+      offset = _offset;
     });
   }
 
@@ -253,8 +249,8 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
     );
     setState(() => offset = _offset);
     final _value = _keys[_keys.indexOf(current)]!;
-    // widget.onValueChanged(_value);
-    // widget.controller?.value = current;
+    widget.onValueChanged(_value);
+    widget.controller?.value = current;
   }
 
   Widget _segmentItem(MapEntry<T, Widget> item) {

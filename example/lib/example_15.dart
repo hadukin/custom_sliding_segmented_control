@@ -40,7 +40,7 @@ class _Example15State extends State<Example15> {
             borderRadius: BorderRadius.circular(100),
           ),
           curve: Curves.easeOutCubic,
-          initialValue: Pet.none,
+          // initialValue: Pet.none,
           children: Map<Pet, Widget>.fromIterable(
             Pet.values,
             key: (pet) => pet as Pet,

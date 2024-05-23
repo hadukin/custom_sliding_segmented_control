@@ -55,7 +55,6 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 16),
             const Example14(),
             const SizedBox(height: 16),
-            const SizedBox(height: 16),
             const Example12(),
             const SizedBox(height: 16),
             const Example3(),
