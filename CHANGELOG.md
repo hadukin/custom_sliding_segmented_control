@@ -1,3 +1,9 @@
+# 1.8.3
+
+## Fix
+
+- Fix calculation size on change orientation
+
 # 1.8.2
 
 ## Fix
