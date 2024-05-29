@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:math';
+
 import 'package:custom_sliding_segmented_control/src/animation_panel.dart';
 import 'package:custom_sliding_segmented_control/src/cache.dart';
 import 'package:custom_sliding_segmented_control/src/compute_offset.dart';
@@ -123,10 +125,12 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final CustomSegmentSettings? customSegmentSettings;
 
   @override
-  _CustomSlidingSegmentedControlState<T> createState() => _CustomSlidingSegmentedControlState();
+  _CustomSlidingSegmentedControlState<T> createState() =>
+      _CustomSlidingSegmentedControlState();
 }
 
-class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmentedControl<T>> {
+class _CustomSlidingSegmentedControlState<T>
+    extends State<CustomSlidingSegmentedControl<T>> {
   T? current;
   double? height;
   double offset = 0.0;
@@ -134,16 +138,21 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
   bool hasTouch = false;
   double? maxSize;
   List<Cache<T>> cacheItems = [];
+  final _scrollController = ScrollController();
+  var _widgetWidth = double.infinity;
+  Timer? _scrollTimer;
 
   @override
   void initState() {
     widget.controller?.addListener(_controllerTap);
     super.initState();
     initialize();
+    _scrollIfNeed();
   }
 
   @override
   void dispose() {
+    _scrollTimer?.cancel();
     widget.controller?.removeListener(_controllerTap);
     super.dispose();
   }
@@ -154,7 +163,8 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
 
     final changeInitial = oldWidget.initialValue != widget.initialValue;
 
-    final changeChildrenLength = oldWidget.children.length != widget.children.length;
+    final changeChildrenLength =
+        oldWidget.children.length != widget.children.length;
 
     if (changeInitial || changeChildrenLength) {
       hasTouch = true;
@@ -166,6 +176,7 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
           isCacheEnabled: false,
         );
       }
+      _scrollIfNeed();
     }
   }
 
@@ -188,7 +199,11 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
     }
   }
 
-  void calculateSize({required Size size, required MapEntry<T?, Widget> item, required bool isCacheEnabled}) {
+  void calculateSize({
+    required Size size,
+    required MapEntry<T?, Widget> item,
+    required bool isCacheEnabled,
+  }) {
     height ??= size.height;
     final Map<T?, double> _temp = {};
     _temp.putIfAbsent(item.key, () => widget.fixedWidth ?? size.width);
@@ -207,11 +222,13 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
         sizes: sizes.values.toList(),
       );
       offset = _offset;
+      _scrollIfNeed();
     });
   }
 
   void _controllerTap() {
-    if (widget.controller!.value == null || current == widget.controller!.value) {
+    if (widget.controller!.value == null ||
+        current == widget.controller!.value) {
       return;
     }
 
@@ -251,6 +268,28 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
     final _value = _keys[_keys.indexOf(current)]!;
     widget.onValueChanged(_value);
     widget.controller?.value = current;
+
+    _scrollIfNeed();
+  }
+
+  void _scrollIfNeed() {
+    _scrollTimer?.cancel();
+    _scrollTimer = Timer(const Duration(milliseconds: 100), () {
+      final size = sizes[current]!;
+      if (offset < _scrollController.offset) {
+        _scrollController.animateTo(
+          offset,
+          duration: widget.duration,
+          curve: widget.curve,
+        );
+      } else if (offset + size > _scrollController.offset + _widgetWidth) {
+        _scrollController.animateTo(
+          offset + size - _widgetWidth + widget.innerPadding.horizontal,
+          duration: widget.duration,
+          curve: widget.curve,
+        );
+      }
+    });
   }
 
   Widget _segmentItem(MapEntry<T, Widget> item) {
@@ -283,9 +322,13 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
       prevIndex = isRtl ? currentIndex + 1 : currentIndex - 1;
     }
 
-    final isHideDivider = (index == prevIndex || index == currentIndex || (isRtl && index == currentIndex + 1)) &&
+    final isHideDivider = (index == prevIndex ||
+            index == currentIndex ||
+            (isRtl && index == currentIndex + 1)) &&
         widget.dividerSettings.isHideAutomatically;
-    final isVisible = isRtl ? item.key != widget.children.keys.first : item.key != widget.children.keys.last;
+    final isVisible = isRtl
+        ? item.key != widget.children.keys.first
+        : item.key != widget.children.keys.last;
 
     return IgnorePointer(
       child: SizedBox(
@@ -304,7 +347,8 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
                     padding: EdgeInsets.zero,
                     margin: EdgeInsets.zero,
                     curve: widget.dividerSettings.curve ?? widget.curve,
-                    duration: widget.dividerSettings.duration ?? widget.duration,
+                    duration:
+                        widget.dividerSettings.duration ?? widget.duration,
                     width: isHideDivider ? 0 : widget.dividerSettings.thickness,
                     decoration: widget.dividerSettings.decoration ??
                         BoxDecoration(
@@ -320,6 +364,11 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
   }
 
   Widget layout() {
+    final minSegmentWidth = widget.isStretch
+        ? ((_widgetWidth - widget.innerPadding.horizontal) /
+            widget.children.length)
+        : 0.0;
+
     return Container(
       clipBehavior: widget.clipBehavior,
       decoration: widget.decoration,
@@ -328,8 +377,12 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
         children: [
           if (widget.isShowDivider && widget.children.length > 1)
             Row(
-              children:
-                  sizes.entries.toList().asMap().entries.map((item) => _dividerItem(item.key, item.value)).toList(),
+              children: sizes.entries
+                  .toList()
+                  .asMap()
+                  .entries
+                  .map((item) => _dividerItem(item.key, item.value))
+                  .toList(),
             ),
           AnimationPanel<T>(
             hasTouch: hasTouch,
@@ -351,7 +404,12 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
                       isCacheEnabled: true,
                     );
                   },
-                  child: widget.isStretch ? Expanded(child: _segmentItem(item)) : _segmentItem(item),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minWidth: minSegmentWidth,
+                    ),
+                    child: _segmentItem(item),
+                  ),
                 ),
               ],
             ],
@@ -363,18 +421,19 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (widget.isStretch)
-              Expanded(
-                child: layout(),
-              )
-            else
-              layout(),
-          ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        _widgetWidth = constraints.maxWidth;
+        return SingleChildScrollView(
+          controller: _scrollController,
+          clipBehavior: Clip.antiAlias,
+          scrollDirection: Axis.horizontal,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: widget.isStretch ? constraints.maxWidth : 0,
+            ),
+            child: layout(),
+          ),
         );
       },
     );
