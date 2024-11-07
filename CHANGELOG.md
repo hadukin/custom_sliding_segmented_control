@@ -1,3 +1,9 @@
+# 1.8.4
+
+## Feat
+
+- BoxDecoration -> Decoration
+
 # 1.8.3
 
 ## Fix
