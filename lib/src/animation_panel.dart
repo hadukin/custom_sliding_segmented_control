@@ -18,7 +18,7 @@ class AnimationPanel<T> extends StatelessWidget {
   final Duration duration;
   final Curve curve;
   final bool hasTouch;
-  final BoxDecoration? decoration;
+  final Decoration? decoration;
 
   @override
   Widget build(BuildContext context) {

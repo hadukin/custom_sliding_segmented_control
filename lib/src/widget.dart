@@ -64,10 +64,10 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   }) : assert(children.length != 0);
 
   /// Decoration main panel
-  final BoxDecoration? decoration;
+  final Decoration? decoration;
 
   /// Decoraton animation panel
-  final BoxDecoration? thumbDecoration;
+  final Decoration? thumbDecoration;
 
   // Segment items map
   final Map<T, Widget> children;
