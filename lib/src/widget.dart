@@ -193,7 +193,7 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
     required MapEntry<T?, Widget> item,
     required bool isCacheEnabled,
   }) {
-    height ??= size.height;
+    height = size.height;
     final Map<T?, double> _temp = {};
     _temp.putIfAbsent(item.key, () => widget.fixedWidth ?? size.width);
 

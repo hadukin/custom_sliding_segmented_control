@@ -1,3 +1,10 @@
+# 1.8.5
+
+## Fix
+
+- Measure size
+- Dynamic change height
+
 # 1.8.4
 
 ## Feat
