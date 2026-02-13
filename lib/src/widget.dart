@@ -123,10 +123,12 @@ class CustomSlidingSegmentedControl<T> extends StatefulWidget {
   final CustomSegmentSettings? customSegmentSettings;
 
   @override
-  _CustomSlidingSegmentedControlState<T> createState() => _CustomSlidingSegmentedControlState();
+  _CustomSlidingSegmentedControlState<T> createState() =>
+      _CustomSlidingSegmentedControlState();
 }
 
-class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmentedControl<T>> {
+class _CustomSlidingSegmentedControlState<T>
+    extends State<CustomSlidingSegmentedControl<T>> {
   T? current;
   double? height;
   double offset = 0.0;
@@ -154,7 +156,8 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
 
     final changeInitial = oldWidget.initialValue != widget.initialValue;
 
-    final changeChildrenLength = oldWidget.children.length != widget.children.length;
+    final changeChildrenLength =
+        oldWidget.children.length != widget.children.length;
 
     if (changeInitial || changeChildrenLength) {
       hasTouch = true;
@@ -215,7 +218,8 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
   }
 
   void _controllerTap() {
-    if (widget.controller!.value == null || current == widget.controller!.value) {
+    if (widget.controller!.value == null ||
+        current == widget.controller!.value) {
       return;
     }
 
@@ -287,9 +291,13 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
       prevIndex = isRtl ? currentIndex + 1 : currentIndex - 1;
     }
 
-    final isHideDivider = (index == prevIndex || index == currentIndex || (isRtl && index == currentIndex + 1)) &&
+    final isHideDivider = (index == prevIndex ||
+            index == currentIndex ||
+            (isRtl && index == currentIndex + 1)) &&
         widget.dividerSettings.isHideAutomatically;
-    final isVisible = isRtl ? item.key != widget.children.keys.first : item.key != widget.children.keys.last;
+    final isVisible = isRtl
+        ? item.key != widget.children.keys.first
+        : item.key != widget.children.keys.last;
 
     return IgnorePointer(
       child: SizedBox(
@@ -308,7 +316,8 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
                     padding: EdgeInsets.zero,
                     margin: EdgeInsets.zero,
                     curve: widget.dividerSettings.curve ?? widget.curve,
-                    duration: widget.dividerSettings.duration ?? widget.duration,
+                    duration:
+                        widget.dividerSettings.duration ?? widget.duration,
                     width: isHideDivider ? 0 : widget.dividerSettings.thickness,
                     decoration: widget.dividerSettings.decoration ??
                         BoxDecoration(
@@ -332,18 +341,23 @@ class _CustomSlidingSegmentedControlState<T> extends State<CustomSlidingSegmente
         children: [
           if (widget.isShowDivider && widget.children.length > 1)
             Row(
-              children:
-                  sizes.entries.toList().asMap().entries.map((item) => _dividerItem(item.key, item.value)).toList(),
+              children: sizes.entries
+                  .toList()
+                  .asMap()
+                  .entries
+                  .map((item) => _dividerItem(item.key, item.value))
+                  .toList(),
             ),
-          AnimationPanel<T>(
-            hasTouch: hasTouch,
-            offset: offset,
-            height: height,
-            width: sizes[current],
-            duration: widget.duration,
-            curve: widget.curve,
-            decoration: widget.thumbDecoration,
-          ),
+          if (widget.initialValue != null)
+            AnimationPanel<T>(
+              hasTouch: hasTouch,
+              offset: offset,
+              height: height,
+              width: sizes[current],
+              duration: widget.duration,
+              curve: widget.curve,
+              decoration: widget.thumbDecoration,
+            ),
           Row(
             children: widget.children.entries.map((item) {
               final measureSize = MeasureSize(
