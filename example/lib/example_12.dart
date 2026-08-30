@@ -1,5 +1,5 @@
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class Example12 extends StatefulWidget {
   const Example12({super.key});
@@ -14,18 +14,9 @@ class _Example12State extends State<Example12> {
     return CustomSlidingSegmentedControl<int>(
       fromMax: true,
       children: const {
-        1: Text(
-          'Segmentation',
-          textAlign: TextAlign.center,
-        ),
-        2: Text(
-          'Max',
-          textAlign: TextAlign.center,
-        ),
-        3: Text(
-          'News',
-          textAlign: TextAlign.center,
-        ),
+        1: Text('Segmentation', textAlign: TextAlign.center),
+        2: Text('Max', textAlign: TextAlign.center),
+        3: Text('News', textAlign: TextAlign.center),
       },
       dividerSettings: DividerSettings(
         thickness: 2,
@@ -49,10 +40,7 @@ class _Example12State extends State<Example12> {
             color: Colors.black.withOpacity(.3),
             blurRadius: 4.0,
             spreadRadius: 1.0,
-            offset: const Offset(
-              0.0,
-              2.0,
-            ),
+            offset: const Offset(0.0, 2.0),
           ),
         ],
       ),

@@ -1,6 +1,6 @@
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:example/enums.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SecondView extends StatelessWidget {
   const SecondView({Key? key}) : super(key: key);
@@ -8,9 +8,7 @@ class SecondView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Second View'),
-      ),
+      appBar: AppBar(title: const Text('Second View')),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -25,14 +23,8 @@ class SecondView extends StatelessWidget {
                     'Flights',
                     textAlign: TextAlign.center,
                   ),
-                  SegmentType.map: Text(
-                    'Map',
-                    textAlign: TextAlign.center,
-                  ),
-                  SegmentType.paper: Text(
-                    'News',
-                    textAlign: TextAlign.center,
-                  ),
+                  SegmentType.map: Text('Map', textAlign: TextAlign.center),
+                  SegmentType.paper: Text('News', textAlign: TextAlign.center),
                 },
                 onValueChanged: (v) {
                   print(v);

@@ -1,13 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class Cache<T> {
   final MapEntry<T?, Widget> item;
   final Size size;
 
-  Cache({
-    required this.item,
-    required this.size,
-  });
+  Cache({required this.item, required this.size});
 
   @override
   bool operator ==(Object other) {

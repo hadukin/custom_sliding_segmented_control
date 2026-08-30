@@ -1,6 +1,6 @@
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:example/enums.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class Example7 extends StatefulWidget {
   const Example7({super.key});
@@ -18,18 +18,9 @@ class _Example7State extends State<Example7> {
         initialValue: SegmentType.map,
         isStretch: true,
         children: const {
-          SegmentType.news: Text(
-            'Flights',
-            textAlign: TextAlign.center,
-          ),
-          SegmentType.map: Text(
-            'Map',
-            textAlign: TextAlign.center,
-          ),
-          SegmentType.paper: Text(
-            'Payment',
-            textAlign: TextAlign.center,
-          ),
+          SegmentType.news: Text('Flights', textAlign: TextAlign.center),
+          SegmentType.map: Text('Map', textAlign: TextAlign.center),
+          SegmentType.paper: Text('Payment', textAlign: TextAlign.center),
         },
         innerPadding: const EdgeInsets.all(4),
         decoration: BoxDecoration(

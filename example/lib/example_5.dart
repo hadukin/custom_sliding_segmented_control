@@ -1,6 +1,6 @@
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 
 class Example5 extends StatefulWidget {
   const Example5({super.key});
@@ -34,10 +34,7 @@ class _Example5State extends State<Example5> {
             color: Colors.black.withOpacity(.3),
             blurRadius: 4.0,
             spreadRadius: 1.0,
-            offset: const Offset(
-              0.0,
-              2.0,
-            ),
+            offset: const Offset(0.0, 2.0),
           ),
         ],
       ),

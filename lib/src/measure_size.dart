@@ -1,14 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MeasureSize extends SingleChildRenderObjectWidget {
   final Function(Size size) onChange;
 
-  const MeasureSize({
-    Key? key,
-    required Widget child,
-    required this.onChange,
-  }) : super(key: key, child: child);
+  const MeasureSize({Key? key, required Widget child, required this.onChange})
+    : super(key: key, child: child);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -16,7 +13,10 @@ class MeasureSize extends SingleChildRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(BuildContext context, covariant _SizeRenderObject renderObject) {
+  void updateRenderObject(
+    BuildContext context,
+    covariant _SizeRenderObject renderObject,
+  ) {
     renderObject.onChange = onChange;
   }
 }
