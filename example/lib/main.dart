@@ -14,7 +14,7 @@ import 'package:example/example_7.dart';
 import 'package:example/example_8.dart';
 import 'package:example/example_9.dart';
 import 'package:example/second_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   runApp(MyApp());
@@ -42,9 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Examples'),
-      ),
+      appBar: AppBar(title: const Text('Examples')),
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -1,6 +1,6 @@
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum Pet { none, cat, dog, bird, snake }
 
@@ -52,7 +52,9 @@ class _Example15State extends State<Example15> {
                 children: [
                   Text(
                     pet.name,
-                    style: TextStyle(color: pet != Pet.snake ? Colors.black : Colors.grey),
+                    style: TextStyle(
+                      color: pet != Pet.snake ? Colors.black : Colors.grey,
+                    ),
                   ),
                 ],
               );

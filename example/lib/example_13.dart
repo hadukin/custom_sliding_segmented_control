@@ -1,5 +1,5 @@
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 
 enum Pet { none, cat, dog, bird, snake }
 
@@ -37,11 +37,7 @@ class _Example13State extends State<Example13> {
 
           return Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                pet.name,
-              ),
-            ],
+            children: [Text(pet.name)],
           );
         },
       ),

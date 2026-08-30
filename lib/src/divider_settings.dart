@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class DividerSettings {
   final double indent;
@@ -33,12 +33,12 @@ class DividerSettings {
 
   @override
   int get hashCode => Object.hashAll([
-        indent,
-        endIndent,
-        thickness,
-        decoration,
-        duration,
-        curve,
-        isHideAutomatically,
-      ]);
+    indent,
+    endIndent,
+    thickness,
+    decoration,
+    duration,
+    curve,
+    isHideAutomatically,
+  ]);
 }

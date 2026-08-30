@@ -1,3 +1,10 @@
+# 2.0.0
+
+## Feat
+
+- Migrates to `material_ui` and `cupertino_ui`.
+- Updates minimum supported SDK version to Flutter 3.44/Dart 3.12.
+
 # 1.8.5
 
 ## Fix
